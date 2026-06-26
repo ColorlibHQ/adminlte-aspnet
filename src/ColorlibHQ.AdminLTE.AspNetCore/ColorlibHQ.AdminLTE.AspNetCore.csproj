@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>14.0</LangVersion>
+    <RazorLanguageVersion>10.0</RazorLanguageVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>ColorlibHQ.AdminLTE.AspNetCore</PackageId>
+    <Version>0.9.0</Version>
+    <Authors>Colorlib</Authors>
+    <Company>Colorlib</Company>
+    <Product>AdminLTE 4 for ASP.NET Core</Product>
+    <Title>AdminLTE 4 for ASP.NET Core (Blazor + MVC/Razor Pages)</Title>
+    <Description>The official AdminLTE 4 admin dashboard template for ASP.NET Core. Ships Blazor components and Tag Helpers for MVC/Razor Pages, plus the compiled AdminLTE/Bootstrap 5.3 static web assets — a config-driven sidebar, dark mode, cards, small boxes, and more. Built on Bootstrap 5.3 with vanilla JS (no jQuery).</Description>
+    <PackageTags>adminlte;bootstrap;blazor;aspnetcore;razor;tag-helpers;dashboard;admin;template;ui;mvc;razor-pages;bootstrap5</PackageTags>
+    <PackageProjectUrl>https://github.com/ColorlibHQ/adminlte-aspnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ColorlibHQ/adminlte-aspnet.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- Drop a 128x128 docs/icon.png to brand the package; auto-included when present. -->
+    <PackageIcon Condition="Exists('..\..\docs\icon.png')">icon.png</PackageIcon>
+    <Copyright>Copyright (c) 2014-2026 Colorlib</Copyright>
+    <PackageReleaseNotes>Initial preview of the official AdminLTE 4 ASP.NET Core port: Blazor components + Tag Helpers + bundled static web assets.</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <!-- Pack the README and icon into the NuGet package root -->
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Condition="Exists('..\..\README.md')" />
+    <None Include="..\..\docs\icon.png" Pack="true" PackagePath="\" Condition="Exists('..\..\docs\icon.png')" />
+  </ItemGroup>
+
+</Project>

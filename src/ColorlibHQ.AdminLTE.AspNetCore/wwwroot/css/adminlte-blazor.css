@@ -1,0 +1,26 @@
+/* Supplementary styles for the Blazor command palette (⌘K). */
+.adminlte-cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1080;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12vh;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.adminlte-cmdk-dialog {
+  width: 100%;
+  max-width: 560px;
+  overflow: hidden;
+}
+
+.adminlte-cmdk-results {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.adminlte-cmdk-dialog kbd {
+  font-size: 0.75rem;
+}

@@ -1,0 +1,11 @@
+/* Demo-only tweaks layered on top of AdminLTE. */
+.login-box-msg {
+    margin: 0 0 1rem;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+}

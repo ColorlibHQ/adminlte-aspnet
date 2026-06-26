@@ -1,0 +1,31 @@
+@page "/widgets/small-boxes"
+
+<PageTitle>Small Boxes · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Small Boxes" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        @foreach (var (theme, title, text, icon) in _boxes)
+        {
+            <div class="col-lg-3 col-6">
+                <SmallBox Theme="@theme" Title="@title" Text="@text" Icon="@icon" Url="#" />
+            </div>
+        }
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Widgets"), new("Small Boxes")];
+
+    private readonly (string Theme, string Title, string Text, string Icon)[] _boxes =
+    [
+        ("primary", "150", "New Orders", "bi-bag-fill"),
+        ("success", "53%", "Bounce Rate", "bi-graph-up"),
+        ("warning", "44", "User Registrations", "bi-person-plus-fill"),
+        ("danger", "65", "Unique Visitors", "bi-pie-chart-fill"),
+        ("info", "1,410", "Messages", "bi-envelope-fill"),
+        ("secondary", "320", "Sessions", "bi-activity"),
+        ("dark", "12", "Servers", "bi-hdd-rack-fill"),
+        ("light", "98%", "Uptime", "bi-heart-pulse-fill"),
+    ];
+}

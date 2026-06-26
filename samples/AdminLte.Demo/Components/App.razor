@@ -1,0 +1,26 @@
+@* Root HTML document. Loads AdminLTE styles/scripts from the RCL static web assets. *@
+@using ColorlibHQ.AdminLTE.AspNetCore.Components
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <base href="/" />
+    <title>AdminLTE 4 for ASP.NET Core</title>
+
+    @* Bootstrap + AdminLTE CSS + no-flash color-mode script, from the RCL. *@
+    <AdminLteStyles />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="stylesheet" href="@Assets["AdminLte.Demo.styles.css"]" />
+    <ImportMap />
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <Routes @rendermode="InteractiveServer" />
+
+    <script src="_framework/blazor.web.js"></script>
+    @* Bootstrap bundle + AdminLTE JS, from the RCL. *@
+    <AdminLteScripts />
+</body>
+</html>

@@ -1,0 +1,28 @@
+@* Blazor-friendly equivalent of the <adminlte-styles> tag helper: renders the
+   AdminLTE/Bootstrap stylesheet links plus the no-flash color-mode script.
+   Use in a Blazor App.razor <head>. (Tag Helpers don't run inside .razor.) *@
+
+<link rel="stylesheet" href="@($"{Base}/vendor/bootstrap/css/bootstrap.min.css")" />
+<link rel="stylesheet" href="@($"{Base}/vendor/bootstrap-icons/font/bootstrap-icons.min.css")" />
+<link rel="stylesheet" href="@($"{Base}/vendor/overlayscrollbars/css/overlayscrollbars.min.css")" />
+<link rel="stylesheet" href="@($"{Base}/css/adminlte{Min}.css")" />
+<link rel="stylesheet" href="@($"{Base}/css/adminlte-blazor.css")" />
+<script>
+    (function () {
+        try {
+            var m = localStorage.getItem('lte-theme') || 'auto';
+            var dark = m === 'dark' || (m === 'auto' && window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+        } catch (e) { }
+    })();
+</script>
+
+@code {
+    private const string Base = "/_content/ColorlibHQ.AdminLTE.AspNetCore";
+
+    /// <summary>Use minified assets (default true).</summary>
+    [Parameter] public bool Minified { get; set; } = true;
+
+    private string Min => Minified ? ".min" : string.Empty;
+}

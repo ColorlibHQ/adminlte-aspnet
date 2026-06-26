@@ -1,0 +1,134 @@
+@* The full AdminLTE app shell: topbar + sidebar + content + footer.
+   Reads AdminLteOptions for branding/menu and the current path for active state.
+   Re-initialises AdminLTE's JS plugins after each interactive render. *@
+@implements IAsyncDisposable
+@inject IOptions<AdminLteOptions> Options
+@inject IMenuService MenuService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<div class="app-wrapper">
+    @if (TopbarContent is not null)
+    {
+        @TopbarContent
+    }
+    else
+    {
+        <Topbar User="User"
+                ShowSearch="@Opts.CommandPalette"
+                ShowColorModeToggle="@Opts.ColorModeToggle"
+                OnSearchClick="OpenPaletteAsync">
+            <EndContent>@TopbarEnd</EndContent>
+        </Topbar>
+    }
+
+    @if (SidebarContent is not null)
+    {
+        @SidebarContent
+    }
+    else
+    {
+        <Sidebar Items="_menu"
+                 Theme="@Opts.SidebarTheme"
+                 CurrentPath="@_currentPath"
+                 BrandUrl="@Opts.BrandUrl"
+                 LogoImage="@Opts.LogoImage"
+                 BrandText="@Opts.BrandText" />
+    }
+
+    <SidebarOverlay />
+
+    <main class="app-main">
+        @ChildContent
+    </main>
+
+    @if (FooterContent is not null)
+    {
+        @FooterContent
+    }
+    else
+    {
+        <Footer FooterText="@Opts.FooterText" />
+    }
+</div>
+
+@if (Opts.CommandPalette)
+{
+    <CommandPalette @ref="_palette" User="AuthorizedUser" />
+}
+
+@code {
+    /// <summary>Page content rendered inside <c>&lt;main class="app-main"&gt;</c> (typically an <see cref="AppContent"/>).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional user for the topbar dropdown and palette filtering.</summary>
+    [Parameter] public TopbarUser? User { get; set; }
+
+    /// <summary>Override the default topbar entirely.</summary>
+    [Parameter] public RenderFragment? TopbarContent { get; set; }
+
+    /// <summary>Inject extra items into the default topbar's end slot.</summary>
+    [Parameter] public RenderFragment? TopbarEnd { get; set; }
+
+    /// <summary>Override the default sidebar entirely.</summary>
+    [Parameter] public RenderFragment? SidebarContent { get; set; }
+
+    /// <summary>Override the default footer entirely.</summary>
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    private AdminLteOptions Opts => Options.Value;
+    private string _currentPath = "/";
+    private IReadOnlyList<MenuItem> _menu = Array.Empty<MenuItem>();
+    private CommandPalette? _palette;
+    private IJSObjectReference? _module;
+
+    /// <summary>
+    /// Optional principal used to filter the menu/palette to authorized items.
+    /// When null (default) the full configured menu is shown.
+    /// </summary>
+    [Parameter] public System.Security.Claims.ClaimsPrincipal? AuthorizedUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+        UpdateCurrentPath();
+        _menu = await MenuService.GetMenuAsync(AuthorizedUser);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/ColorlibHQ.AdminLTE.AspNetCore/js/adminlte-blazor.js");
+        }
+        // Re-bind AdminLTE plugins to the freshly rendered DOM on every render.
+        if (_module is not null)
+            await _module.InvokeVoidAsync("initAdminLte");
+    }
+
+    private Task OpenPaletteAsync() => _palette?.OpenPalette() ?? Task.CompletedTask;
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        UpdateCurrentPath();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateCurrentPath()
+    {
+        var path = "/" + Navigation.ToBaseRelativePath(Navigation.Uri).Split('?')[0].Split('#')[0];
+        _currentPath = path.TrimEnd('/') is { Length: > 0 } trimmed ? trimmed : "/";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+        try
+        {
+            if (_module is not null)
+                await _module.DisposeAsync();
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+    }
+}

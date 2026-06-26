@@ -1,0 +1,50 @@
+@* Bootstrap/AdminLTE alert with optional icon, title and dismiss button. *@
+
+@if (_visible)
+{
+    <div class="alert alert-@Theme @(Dismissible ? "alert-dismissible" : null)" role="alert">
+        @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Icon))
+        {
+            <h5>
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <i class="bi @Icon me-2"></i>
+                }
+                @Title
+            </h5>
+        }
+        @ChildContent
+        @if (Dismissible)
+        {
+            <button type="button" class="btn-close" aria-label="Close" @onclick="Dismiss"></button>
+        }
+    </div>
+}
+
+@code {
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "info";
+
+    /// <summary>Optional heading.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Optional Bootstrap Icons class for the heading.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Show a close button.</summary>
+    [Parameter] public bool Dismissible { get; set; }
+
+    /// <summary>Raised when the alert is dismissed.</summary>
+    [Parameter] public EventCallback OnDismiss { get; set; }
+
+    /// <summary>Alert message.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _visible = true;
+
+    private async Task Dismiss()
+    {
+        _visible = false;
+        await OnDismiss.InvokeAsync();
+    }
+}

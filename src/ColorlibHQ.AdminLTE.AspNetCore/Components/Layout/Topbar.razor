@@ -1,0 +1,94 @@
+@* The top navigation bar: push-menu toggle, optional search/command-palette pill,
+   color-mode toggle, and an optional user dropdown. *@
+
+<nav class="app-header navbar navbar-expand bg-body @NavbarClass">
+    <div class="container-fluid">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button type="button" class="nav-link" data-lte-toggle="sidebar"
+                        aria-label="Toggle sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+            </li>
+            @StartContent
+        </ul>
+
+        <ul class="navbar-nav ms-auto">
+            @if (ShowSearch)
+            {
+                <li class="nav-item d-flex align-items-center me-2">
+                    <button type="button"
+                            class="btn btn-sm rounded-pill border bg-body-secondary text-secondary d-inline-flex align-items-center gap-2 px-3"
+                            @onclick="OnSearchClick">
+                        <i class="bi bi-search"></i>
+                        <span class="d-none d-md-inline">Search</span>
+                        <kbd class="d-none d-md-inline border rounded px-1 ms-1 bg-body text-body-secondary">⌘K</kbd>
+                    </button>
+                </li>
+            }
+
+            @EndContent
+
+            @if (ShowColorModeToggle)
+            {
+                <ColorModeToggle />
+            }
+
+            @if (User is not null)
+            {
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle d-flex align-items-center"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (!string.IsNullOrEmpty(User.AvatarUrl))
+                        {
+                            <img src="@User.AvatarUrl" class="user-image rounded-circle shadow" alt="@User.Name" />
+                        }
+                        <span class="d-none d-md-inline">@User.Name</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                        <li class="user-header text-bg-primary">
+                            @if (!string.IsNullOrEmpty(User.AvatarUrl))
+                            {
+                                <img src="@User.AvatarUrl" class="rounded-circle shadow" alt="@User.Name" />
+                            }
+                            <p>
+                                @User.Name
+                                @if (!string.IsNullOrEmpty(User.Role))
+                                {
+                                    <span> - @User.Role</span>
+                                }
+                            </p>
+                        </li>
+                        <li class="user-footer">
+                            <a href="@User.ProfileUrl" class="btn btn-outline-secondary">Profile</a>
+                            <a href="@User.LogoutUrl" class="btn btn-outline-danger float-end">Sign out</a>
+                        </li>
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+@code {
+    /// <summary>Show the search / command-palette pill.</summary>
+    [Parameter] public bool ShowSearch { get; set; } = true;
+
+    /// <summary>Show the light/dark/auto color-mode toggle.</summary>
+    [Parameter] public bool ShowColorModeToggle { get; set; } = true;
+
+    /// <summary>Extra classes on the navbar.</summary>
+    [Parameter] public string? NavbarClass { get; set; }
+
+    /// <summary>Optional user shown in a dropdown at the far right.</summary>
+    [Parameter] public TopbarUser? User { get; set; }
+
+    /// <summary>Raised when the search pill is clicked (e.g. to open the command palette).</summary>
+    [Parameter] public EventCallback OnSearchClick { get; set; }
+
+    /// <summary>Custom nav items inserted after the push-menu toggle.</summary>
+    [Parameter] public RenderFragment? StartContent { get; set; }
+
+    /// <summary>Custom nav items inserted before the color-mode toggle.</summary>
+    [Parameter] public RenderFragment? EndContent { get; set; }
+}

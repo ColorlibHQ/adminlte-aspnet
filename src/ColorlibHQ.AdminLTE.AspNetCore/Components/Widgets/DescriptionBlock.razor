@@ -1,0 +1,45 @@
+@* AdminLTE description-block — a compact labelled stat with optional trend. *@
+<div class="description-block @Class">
+    @if (Percentage is not null)
+    {
+        <span class="description-percentage @(Percentage >= 0 ? "text-success" : "text-danger")">
+            <i class="bi @(Percentage >= 0 ? "bi-caret-up-fill" : "bi-caret-down-fill")"></i>
+            @Math.Abs(Percentage.Value)%
+        </span>
+    }
+    <h5 class="description-header">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <i class="bi @Icon @(string.IsNullOrEmpty(IconTheme) ? null : $"text-{IconTheme}") me-1"></i>
+        }
+        @Header
+    </h5>
+    @if (!string.IsNullOrEmpty(Text))
+    {
+        <span class="description-text">@Text</span>
+    }
+    @ChildContent
+</div>
+
+@code {
+    /// <summary>The big value / header.</summary>
+    [Parameter, EditorRequired] public string Header { get; set; } = string.Empty;
+
+    /// <summary>Caption under the header.</summary>
+    [Parameter] public string? Text { get; set; }
+
+    /// <summary>Optional Bootstrap Icons class.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Icon color theme.</summary>
+    [Parameter] public string? IconTheme { get; set; }
+
+    /// <summary>Trend percentage; positive renders green-up, negative red-down.</summary>
+    [Parameter] public double? Percentage { get; set; }
+
+    /// <summary>Extra classes.</summary>
+    [Parameter] public string? Class { get; set; }
+
+    /// <summary>Extra content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

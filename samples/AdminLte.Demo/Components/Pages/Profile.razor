@@ -1,0 +1,39 @@
+@page "/profile"
+
+<PageTitle>Profile · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Profile" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-4">
+            <ProfileCard Name="Alex Rivera"
+                         Title="Administrator"
+                         Image="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=160"
+                         Stats="_stats"
+                         Socials="_socials" />
+        </div>
+        <div class="col-md-8">
+            <Card Title="About" Theme="primary" Variant="outline">
+                <p>This profile card, the avatar stats and the social buttons all come from the
+                    <code>&lt;ProfileCard&gt;</code> Blazor component.</p>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Profile")];
+
+    private readonly IReadOnlyList<ProfileCard.Stat> _stats =
+    [
+        new("Followers", "1,322"),
+        new("Following", "543"),
+        new("Friends", "13,287"),
+    ];
+
+    private readonly IReadOnlyList<ProfileCard.Social> _socials =
+    [
+        new("bi-github", "https://github.com/ColorlibHQ", "dark"),
+        new("bi-globe", "https://adminlte.io", "primary"),
+    ];
+}

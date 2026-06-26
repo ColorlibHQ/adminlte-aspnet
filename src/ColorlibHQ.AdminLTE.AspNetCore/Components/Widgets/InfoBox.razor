@@ -1,0 +1,71 @@
+@* AdminLTE info-box stat widget with a colored icon chip and optional progress bar. *@
+
+<div class="info-box @(Variant == "solid" ? $"text-bg-{Theme}" : null) @BoxClass">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <span class="info-box-icon @(Variant == "solid" ? null : $"text-bg-{IconTheme ?? Theme}")">
+            <i class="bi @Icon"></i>
+        </span>
+    }
+    <div class="info-box-content">
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <span class="info-box-text">@Text</span>
+        }
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <span class="info-box-number">
+                @Title
+                @if (!string.IsNullOrEmpty(Unit))
+                {
+                    <small>@Unit</small>
+                }
+            </span>
+        }
+        @if (Progress is not null)
+        {
+            <div class="progress">
+                <div class="progress-bar bg-@Theme" style="width:@(Progress)%"></div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ProgressText))
+        {
+            <span class="progress-description">@ProgressText</span>
+        }
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    /// <summary>The number / stat (right column).</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Label (left column).</summary>
+    [Parameter] public string? Text { get; set; }
+
+    /// <summary>Bootstrap Icons class.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Bootstrap theme for the icon chip / solid background.</summary>
+    [Parameter] public string Theme { get; set; } = "info";
+
+    /// <summary>Override the icon color independently of <see cref="Theme"/>.</summary>
+    [Parameter] public string? IconTheme { get; set; }
+
+    /// <summary><c>default</c> or <c>solid</c> (fully colored box).</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>Unit suffix appended to the number (e.g. <c>%</c>).</summary>
+    [Parameter] public string? Unit { get; set; }
+
+    /// <summary>Progress bar value (0-100). When null, no bar is shown.</summary>
+    [Parameter] public int? Progress { get; set; }
+
+    /// <summary>Caption under the progress bar.</summary>
+    [Parameter] public string? ProgressText { get; set; }
+
+    /// <summary>Extra classes on the box.</summary>
+    [Parameter] public string? BoxClass { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

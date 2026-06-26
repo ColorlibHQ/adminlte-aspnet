@@ -1,0 +1,32 @@
+@* Breadcrumb trail. *@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb @Class">
+        @for (var i = 0; i < Items.Count; i++)
+        {
+            var crumb = Items[i];
+            var isLast = i == Items.Count - 1;
+            <li class="breadcrumb-item @(isLast ? "active" : null)"
+                aria-current="@(isLast ? "page" : null)">
+                @if (!isLast && !string.IsNullOrEmpty(crumb.Href))
+                {
+                    <a href="@crumb.Href">@crumb.Label</a>
+                }
+                else
+                {
+                    @crumb.Label
+                }
+            </li>
+        }
+    </ol>
+</nav>
+
+@code {
+    /// <summary>One breadcrumb in the trail.</summary>
+    public sealed record Crumb(string Label, string? Href = null);
+
+    /// <summary>The crumbs, in order. The last one renders as the active page.</summary>
+    [Parameter] public IReadOnlyList<Crumb> Items { get; set; } = Array.Empty<Crumb>();
+
+    /// <summary>Extra classes on the <c>&lt;ol&gt;</c>.</summary>
+    [Parameter] public string? Class { get; set; }
+}

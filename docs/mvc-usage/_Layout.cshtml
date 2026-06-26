@@ -1,0 +1,62 @@
+@* Example AdminLTE layout for an MVC / Razor Pages app using the Tag Helpers.
+   Place in Views/Shared/_Layout.cshtml. Register services in Program.cs with
+   builder.Services.AddAdminLte(builder.Configuration) and call
+   builder.Services.AddHttpContextAccessor(). *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>@ViewData["Title"] - AdminLTE</title>
+
+    @* Bootstrap + AdminLTE CSS + no-flash color-mode script from the NuGet static assets. *@
+    <adminlte-styles />
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button type="button" class="nav-link" data-lte-toggle="sidebar" aria-label="Toggle sidebar">
+                            <i class="bi bi-list"></i>
+                        </button>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    @* Server-rendered light/dark/auto dropdown. *@
+                    <adminlte-color-mode-toggle />
+                </ul>
+            </div>
+        </nav>
+
+        @* Config-driven sidebar from appsettings.json ("AdminLte:Menu"). *@
+        <adminlte-sidebar />
+
+        <div class="sidebar-overlay"></div>
+
+        <main class="app-main">
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                </div>
+            </div>
+            <div class="app-content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <strong>Copyright &copy; 2014-2026 <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.</strong>
+            All rights reserved.
+        </footer>
+    </div>
+
+    @* OverlayScrollbars + Bootstrap bundle + AdminLTE JS from the NuGet static assets. *@
+    <adminlte-scripts />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

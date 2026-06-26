@@ -1,0 +1,98 @@
+@page "/"
+@* Dashboard — dogfoods small boxes, info boxes, cards and a timeline. *@
+
+<PageTitle>Dashboard · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Dashboard" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <SmallBox Theme="primary" Title="150" Text="New Orders" Icon="bi-bag-fill" Url="/widgets/small-boxes" />
+        </div>
+        <div class="col-lg-3 col-6">
+            <SmallBox Theme="success" Title="53%" Text="Bounce Rate" Icon="bi-graph-up" Url="/widgets/small-boxes" />
+        </div>
+        <div class="col-lg-3 col-6">
+            <SmallBox Theme="warning" Title="44" Text="User Registrations" Icon="bi-person-plus-fill" Url="/widgets/small-boxes" />
+        </div>
+        <div class="col-lg-3 col-6">
+            <SmallBox Theme="danger" Title="65" Text="Unique Visitors" Icon="bi-pie-chart-fill" Url="/widgets/small-boxes" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <InfoBox Theme="info" Icon="bi-envelope-fill" Text="Messages" Title="1,410" />
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <InfoBox Theme="danger" Icon="bi-flag-fill" Text="Bookmarks" Title="410" />
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <InfoBox Theme="success" Icon="bi-cloud-download-fill" Text="Downloads" Title="13,648" Progress="70" ProgressText="70% increase" />
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <InfoBox Theme="warning" Icon="bi-star-fill" Text="Likes" Title="93,139" Progress="50" ProgressText="50% increase" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <Card Title="Monthly Recap" Icon="bi-bar-chart-line" Theme="primary" Variant="outline" Collapsible="true">
+                <p>This card, the small boxes, info boxes and the sidebar menu are all driven by the
+                    <code>ColorlibHQ.AdminLTE.AspNetCore</code> Blazor components.</p>
+                <Progress Value="80" Theme="primary" ShowLabel="true" />
+                <div class="mt-2"></div>
+                <Progress Value="55" Theme="success" Striped="true" Animated="true" ShowLabel="true" />
+                <div class="mt-3 d-flex gap-2">
+                    <Button Theme="primary" Icon="bi-download" Label="Export" />
+                    <Button Theme="secondary" Outline="true" Icon="bi-arrow-clockwise" Label="Refresh" />
+                </div>
+            </Card>
+
+            <Card Title="Quick stats" Theme="info">
+                <div class="row">
+                    <div class="col-sm-3 col-6">
+                        <DescriptionBlock Header="$35,210.43" Text="TOTAL REVENUE" Percentage="17" />
+                    </div>
+                    <div class="col-sm-3 col-6">
+                        <DescriptionBlock Header="1,200" Text="GOAL COMPLETION" Percentage="-2" />
+                    </div>
+                    <div class="col-sm-3 col-6">
+                        <DescriptionBlock Header="320" Text="NEW CUSTOMERS" Percentage="12" />
+                    </div>
+                    <div class="col-sm-3 col-6">
+                        <DescriptionBlock Header="65%" Text="CONVERSIONS" Percentage="7" />
+                    </div>
+                </div>
+            </Card>
+        </div>
+
+        <div class="col-md-4">
+            <Card Title="Activity" Theme="secondary" Variant="outline">
+                <Timeline Items="_timeline" />
+            </Card>
+
+            <Alert Theme="success" Title="Welcome" Icon="bi-check-circle-fill" Dismissible="true">
+                You're running the official AdminLTE 4 ASP.NET Core port. Press <kbd>⌘K</kbd> to search.
+            </Alert>
+
+            <Callout Theme="info" Title="Tip">
+                Toggle light / dark / auto from the topbar — your choice is saved to localStorage.
+            </Callout>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+    [
+        new("Home", "/"),
+        new("Dashboard"),
+    ];
+
+    private readonly IReadOnlyList<Timeline.Entry> _timeline =
+    [
+        new() { Icon = "bi-bag", IconTheme = "primary", Title = "New order #1024", Time = "12:30", Body = "A new order was placed." },
+        new() { Icon = "bi-person-plus", IconTheme = "success", Title = "New user registered", Time = "10:05" },
+        new() { Icon = "bi-envelope", IconTheme = "info", Title = "3 new messages", Time = "09:15" },
+    ];
+}

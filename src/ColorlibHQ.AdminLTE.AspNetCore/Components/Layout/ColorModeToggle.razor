@@ -1,0 +1,58 @@
+@* Light / Dark / Auto color-mode dropdown. Persists to localStorage via ColorModeService. *@
+@implements IDisposable
+@inject ColorModeService ColorMode
+
+<li class="nav-item dropdown">
+    <button id="bd-theme" class="nav-link" type="button"
+            aria-label="Toggle color scheme" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi @ColorMode.Current.ToIcon()" aria-hidden="true"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme"
+        style="--bs-dropdown-min-width: 8rem;">
+        @foreach (var mode in _modes)
+        {
+            var selected = ColorMode.Current == mode;
+            <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center @(selected ? "active" : null)"
+                        aria-pressed="@(selected ? "true" : "false")"
+                        @onclick="() => SelectAsync(mode)">
+                    <i class="bi @mode.ToIcon() me-2" aria-hidden="true"></i>@Label(mode)
+                    @if (selected)
+                    {
+                        <i class="bi bi-check-lg ms-auto" aria-hidden="true"></i>
+                    }
+                </button>
+            </li>
+        }
+    </ul>
+</li>
+
+@code {
+    private static readonly ColorMode[] _modes =
+        [ColorMode.Light, ColorMode.Dark, ColorMode.Auto];
+
+    protected override void OnInitialized() => ColorMode.Changed += OnChanged;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Read persisted preference once the circuit is interactive.
+            await ColorMode.InitializeAsync();
+        }
+    }
+
+    private Task SelectAsync(ColorMode mode) => ColorMode.SetAsync(mode).AsTask();
+
+    private static string Label(ColorMode mode) => mode switch
+    {
+        ColorMode.Light => "Light",
+        ColorMode.Dark => "Dark",
+        _ => "Auto",
+    };
+
+    private void OnChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => ColorMode.Changed -= OnChanged;
+}

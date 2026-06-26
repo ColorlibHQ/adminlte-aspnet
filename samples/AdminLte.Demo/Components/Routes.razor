@@ -1,0 +1,16 @@
+@* Router. Uses the AdminLTE DashboardLayout as the default layout. *@
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1, h3" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(Layout.MainLayout)">
+            <AppContent Title="Page not found">
+                <Callout Theme="warning" Title="404">
+                    The page you requested does not exist.
+                </Callout>
+            </AppContent>
+        </LayoutView>
+    </NotFound>
+</Router>

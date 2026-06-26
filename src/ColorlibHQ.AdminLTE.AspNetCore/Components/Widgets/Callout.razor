@@ -1,0 +1,19 @@
+@* AdminLTE callout — a bordered note block. *@
+<div class="callout callout-@Theme">
+    @if (!string.IsNullOrEmpty(Title))
+    {
+        <h5>@Title</h5>
+    }
+    @ChildContent
+</div>
+
+@code {
+    /// <summary>Bootstrap theme color (drives the left border).</summary>
+    [Parameter] public string Theme { get; set; } = "info";
+
+    /// <summary>Optional heading.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Callout body.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

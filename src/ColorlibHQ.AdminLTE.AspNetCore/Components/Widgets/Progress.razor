@@ -1,0 +1,40 @@
+@* Bootstrap progress bar. *@
+<div class="progress @SizeClass" style="@(string.IsNullOrEmpty(Height) ? null : $"height:{Height}")"
+     role="progressbar" aria-valuenow="@Value" aria-valuemin="0" aria-valuemax="@Max">
+    <div class="progress-bar bg-@Theme @(Striped ? "progress-bar-striped" : null) @(Animated ? "progress-bar-animated" : null)"
+         style="width:@(Percent)%">
+        @if (ShowLabel)
+        {
+            @($"{Percent}%")
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>Current value.</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Maximum value.</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "primary";
+
+    /// <summary>Size variant: <c>sm</c> or <c>lg</c>.</summary>
+    [Parameter] public string? Size { get; set; }
+
+    /// <summary>Striped pattern.</summary>
+    [Parameter] public bool Striped { get; set; }
+
+    /// <summary>Animated stripes.</summary>
+    [Parameter] public bool Animated { get; set; }
+
+    /// <summary>Show the percentage label in the bar.</summary>
+    [Parameter] public bool ShowLabel { get; set; }
+
+    /// <summary>Custom CSS height, e.g. <c>1.5rem</c>.</summary>
+    [Parameter] public string? Height { get; set; }
+
+    private int Percent => Max <= 0 ? 0 : (int)Math.Round(Math.Clamp(Value / Max, 0, 1) * 100);
+    private string? SizeClass => Size switch { "sm" => "progress-sm", "lg" => "progress-lg", _ => null };
+}

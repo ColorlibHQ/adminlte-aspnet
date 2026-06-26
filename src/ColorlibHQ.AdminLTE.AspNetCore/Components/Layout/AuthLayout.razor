@@ -1,0 +1,65 @@
+@* Centered card layout for login / register pages. *@
+
+<div class="@BoxClass">
+    @if (Variant == "v2")
+    {
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="@LogoHref" class="link-dark h1 text-decoration-none">
+                    @if (Logo is not null)
+                    {
+                        @Logo
+                    }
+                    else
+                    {
+                        <b>Admin</b><span>LTE</span>
+                    }
+                </a>
+            </div>
+            <div class="card-body @CardBodyClass">
+                @ChildContent
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="@LogoClass">
+            <a href="@LogoHref" class="text-decoration-none">
+                @if (Logo is not null)
+                {
+                    @Logo
+                }
+                else
+                {
+                    <b>Admin</b><span>LTE</span>
+                }
+            </a>
+        </div>
+        <div class="card">
+            <div class="card-body @CardBodyClass">
+                @ChildContent
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary><c>login</c> or <c>register</c>; drives the box/body class names.</summary>
+    [Parameter] public string AuthType { get; set; } = "login";
+
+    /// <summary>Card style: <c>default</c> (logo above card) or <c>v2</c> (logo in card header).</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>Where the logo links to.</summary>
+    [Parameter] public string LogoHref { get; set; } = "/";
+
+    /// <summary>Custom logo markup.</summary>
+    [Parameter] public RenderFragment? Logo { get; set; }
+
+    /// <summary>The auth form.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string BoxClass => AuthType == "register" ? "register-box" : "login-box";
+    private string LogoClass => AuthType == "register" ? "register-logo" : "login-logo";
+    private string CardBodyClass => AuthType == "register" ? "register-card-body" : "login-card-body";
+}

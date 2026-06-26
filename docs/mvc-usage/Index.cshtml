@@ -1,0 +1,21 @@
+@* Example MVC view using the AdminLTE widget Tag Helpers. *@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <adminlte-small-box title="150" text="New Orders" icon="bi-bag-fill" theme="primary" url="/orders" />
+    </div>
+    <div class="col-lg-3 col-6">
+        <adminlte-small-box title="53%" text="Bounce Rate" icon="bi-graph-up" theme="success" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <adminlte-card title="Welcome" theme="primary" variant="outline" collapsible="true">
+            <p>This card and the small boxes above are server-rendered AdminLTE Tag Helpers.</p>
+        </adminlte-card>
+    </div>
+</div>

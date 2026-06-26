@@ -1,0 +1,43 @@
+@* The left navigation panel: brand + scrollable menu. *@
+
+<aside class="app-sidebar @SidebarClass" data-bs-theme="@Theme">
+    @if (Brand is not null)
+    {
+        @Brand
+    }
+    else
+    {
+        <SidebarBrand Href="@BrandUrl" LogoImage="@LogoImage" BrandText="@BrandText" />
+    }
+    <div class="sidebar-wrapper">
+        <SidebarNav Items="Items" CurrentPath="@CurrentPath" Accordion="Accordion" />
+        @ChildContent
+    </div>
+</aside>
+
+@code {
+    /// <summary>The menu tree.</summary>
+    [Parameter] public IReadOnlyList<MenuItem> Items { get; set; } = Array.Empty<MenuItem>();
+
+    /// <summary>Sidebar theme: <c>dark</c> or <c>light</c>.</summary>
+    [Parameter] public string Theme { get; set; } = "dark";
+
+    /// <summary>Extra classes on the <c>&lt;aside&gt;</c>.</summary>
+    [Parameter] public string SidebarClass { get; set; } = "bg-body-secondary shadow";
+
+    /// <summary>Current request path for active highlighting.</summary>
+    [Parameter] public string CurrentPath { get; set; } = "/";
+
+    /// <summary>Accordion mode for the treeview.</summary>
+    [Parameter] public bool Accordion { get; set; }
+
+    [Parameter] public string BrandUrl { get; set; } = "/";
+    [Parameter] public string? LogoImage { get; set; }
+    [Parameter] public string BrandText { get; set; } = "AdminLTE 4";
+
+    /// <summary>Override the brand block entirely.</summary>
+    [Parameter] public RenderFragment? Brand { get; set; }
+
+    /// <summary>Extra content appended below the menu.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

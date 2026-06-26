@@ -1,0 +1,15 @@
+@* Blazor-friendly equivalent of the <adminlte-scripts> tag helper. Place near
+   the end of <body> in a Blazor App.razor, after blazor.web.js. *@
+
+<script src="@($"{Base}/vendor/overlayscrollbars/js/overlayscrollbars.browser.es6.min.js")"></script>
+<script src="@($"{Base}/vendor/bootstrap/js/bootstrap.bundle.min.js")"></script>
+<script src="@($"{Base}/js/adminlte{Min}.js")"></script>
+
+@code {
+    private const string Base = "/_content/ColorlibHQ.AdminLTE.AspNetCore";
+
+    /// <summary>Use minified assets (default true).</summary>
+    [Parameter] public bool Minified { get; set; } = true;
+
+    private string Min => Minified ? ".min" : string.Empty;
+}

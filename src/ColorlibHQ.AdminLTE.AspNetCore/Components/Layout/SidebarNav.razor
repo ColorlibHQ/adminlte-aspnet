@@ -1,0 +1,23 @@
+@* The sidebar menu list. Renders each top-level MenuItem. *@
+
+<nav class="mt-2" aria-label="Main navigation">
+    <ul id="navigation" class="nav sidebar-menu flex-column"
+        data-lte-toggle="treeview" data-accordion="@(Accordion ? "true" : "false")"
+        role="menu">
+        @foreach (var item in Items)
+        {
+            <SidebarNavItem Item="item" CurrentPath="@CurrentPath" />
+        }
+    </ul>
+</nav>
+
+@code {
+    /// <summary>The menu tree to render.</summary>
+    [Parameter] public IReadOnlyList<MenuItem> Items { get; set; } = Array.Empty<MenuItem>();
+
+    /// <summary>Current request path for active-item highlighting.</summary>
+    [Parameter] public string CurrentPath { get; set; } = "/";
+
+    /// <summary>Accordion mode — only one group open at a time (handled by AdminLTE JS).</summary>
+    [Parameter] public bool Accordion { get; set; }
+}

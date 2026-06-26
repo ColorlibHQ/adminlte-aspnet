@@ -1,0 +1,48 @@
+## .NET build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+artifacts/
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+
+## Rider / Visual Studio / VS Code
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+## ASP.NET / Blazor
+**/wwwroot/_framework/
+**/compiler/generated/
+
+## Tooling / logs
+*.binlog
+*.log
+msbuild.log
+TestResults/
+*.trx
+*.coverage
+coverage*.json
+
+## OS
+.DS_Store
+Thumbs.db

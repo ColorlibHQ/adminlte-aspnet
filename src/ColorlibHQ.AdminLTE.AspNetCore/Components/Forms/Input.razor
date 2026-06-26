@@ -1,0 +1,87 @@
+@* Labeled text input with optional input-group prepend/append and error state.
+   Supports two-way binding via @bind-Value. *@
+<div class="mb-3 @GroupClass">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label for="@InputId" class="form-label">@Label</label>
+    }
+    @if (HasGroup)
+    {
+        <div class="input-group @GroupSizeClass">
+            @if (!string.IsNullOrEmpty(Prepend))
+            {
+                <span class="input-group-text">@Prepend</span>
+            }
+            <input id="@InputId" type="@Type" placeholder="@Placeholder"
+                   class="form-control @(string.IsNullOrEmpty(Error) ? null : "is-invalid")"
+                   value="@Value" @oninput="OnInput" disabled="@Disabled" required="@Required"
+                   @attributes="AdditionalAttributes" />
+            @if (!string.IsNullOrEmpty(Append))
+            {
+                <span class="input-group-text">@Append</span>
+            }
+            @if (!string.IsNullOrEmpty(Error))
+            {
+                <div class="invalid-feedback">@Error</div>
+            }
+        </div>
+    }
+    else
+    {
+        <input id="@InputId" type="@Type" placeholder="@Placeholder"
+               class="form-control @(string.IsNullOrEmpty(Error) ? null : "is-invalid")"
+               value="@Value" @oninput="OnInput" disabled="@Disabled" required="@Required"
+               @attributes="AdditionalAttributes" />
+        @if (!string.IsNullOrEmpty(Error))
+        {
+            <div class="invalid-feedback d-block">@Error</div>
+        }
+    }
+</div>
+
+@code {
+    /// <summary>Field label.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Input <c>type</c> attribute.</summary>
+    [Parameter] public string Type { get; set; } = "text";
+
+    /// <summary>Element id (auto-generated when omitted).</summary>
+    [Parameter] public string? Id { get; set; }
+
+    /// <summary>Placeholder text.</summary>
+    [Parameter] public string? Placeholder { get; set; }
+
+    /// <summary>The bound value.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Two-way binding callback (<c>@bind-Value</c>).</summary>
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>Validation error message (sets <c>is-invalid</c>).</summary>
+    [Parameter] public string? Error { get; set; }
+
+    /// <summary>Prepend text in an input group.</summary>
+    [Parameter] public string? Prepend { get; set; }
+
+    /// <summary>Append text in an input group.</summary>
+    [Parameter] public string? Append { get; set; }
+
+    /// <summary>Input-group size: <c>sm</c> or <c>lg</c>.</summary>
+    [Parameter] public string? GroupSize { get; set; }
+
+    /// <summary>Extra classes on the wrapping form group.</summary>
+    [Parameter] public string? GroupClass { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool Required { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string InputId => Id ?? $"in-{GetHashCode():x}";
+    private bool HasGroup => !string.IsNullOrEmpty(Prepend) || !string.IsNullOrEmpty(Append);
+    private string? GroupSizeClass => GroupSize switch { "sm" => "input-group-sm", "lg" => "input-group-lg", _ => null };
+
+    private Task OnInput(ChangeEventArgs e) => ValueChanged.InvokeAsync(e.Value?.ToString());
+}

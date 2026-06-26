@@ -1,0 +1,54 @@
+@* Themed button with optional icon. *@
+<button type="@Type" class="btn @ThemeClass @SizeClass @(Block ? "w-100" : null)"
+        disabled="@Disabled" @attributes="AdditionalAttributes" @onclick="OnClick">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <i class="bi @Icon @(ChildContent is null && Label is null ? null : "me-1")"></i>
+    }
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Label
+    }
+</button>
+
+@code {
+    /// <summary>HTML button type: <c>button</c>, <c>submit</c> or <c>reset</c>.</summary>
+    [Parameter] public string Type { get; set; } = "button";
+
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "primary";
+
+    /// <summary>Use the outline variant.</summary>
+    [Parameter] public bool Outline { get; set; }
+
+    /// <summary>Size: <c>sm</c> or <c>lg</c>.</summary>
+    [Parameter] public string? Size { get; set; }
+
+    /// <summary>Bootstrap Icons class.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Text label (used when no child content is given).</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Full-width button.</summary>
+    [Parameter] public bool Block { get; set; }
+
+    /// <summary>Disable the button.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Click handler.</summary>
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    /// <summary>Button content (overrides <see cref="Label"/>).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ThemeClass => Outline ? $"btn-outline-{Theme}" : $"btn-{Theme}";
+    private string? SizeClass => Size switch { "sm" => "btn-sm", "lg" => "btn-lg", _ => null };
+}

@@ -1,0 +1,153 @@
+@* ⌘K / Ctrl+K command palette that searches the (authorized) sidebar menu. *@
+@implements IAsyncDisposable
+@inject IMenuService MenuService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+@if (_open)
+{
+    <div class="adminlte-cmdk-overlay" role="presentation" @onclick="Close">
+        <div class="card shadow-lg adminlte-cmdk-dialog" role="dialog" aria-modal="true"
+             aria-label="Command palette" @onclick:stopPropagation>
+            <div class="input-group input-group-lg border-bottom">
+                <span class="input-group-text bg-body border-0"><i class="bi bi-search"></i></span>
+                <input @ref="_input" class="form-control border-0 shadow-none" type="search"
+                       placeholder="Search pages…" autocomplete="off"
+                       @bind="_query" @bind:event="oninput" @onkeydown="OnKeyDown" />
+            </div>
+            <div class="list-group list-group-flush adminlte-cmdk-results" role="listbox">
+                @if (_results.Count == 0)
+                {
+                    <div class="list-group-item text-body-secondary">No results.</div>
+                }
+                else
+                {
+                    @for (var i = 0; i < _results.Count; i++)
+                    {
+                        var index = i;
+                        var item = _results[index];
+                        <button type="button" role="option"
+                                class="list-group-item list-group-item-action d-flex align-items-center gap-2 @(index == _active ? "active" : null)"
+                                @onclick="() => Go(item)">
+                            <i class="bi @(string.IsNullOrEmpty(item.Icon) ? "bi-arrow-return-right" : item.Icon)"></i>
+                            <span class="flex-grow-1 text-start">@item.Label</span>
+                            @if (!string.IsNullOrEmpty(item.Group))
+                            {
+                                <span class="badge fw-normal text-bg-secondary">@item.Group</span>
+                            }
+                        </button>
+                    }
+                }
+            </div>
+            <div class="card-footer d-flex justify-content-between small text-body-secondary">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open &middot; <kbd>esc</kbd> close</span>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// Optional user used to filter the searchable menu to authorized items.
+    /// Pass <c>AuthenticationState.User</c> when behind authentication.
+    /// </summary>
+    [Parameter] public System.Security.Claims.ClaimsPrincipal? User { get; set; }
+
+    private bool _open;
+    private string _query = string.Empty;
+    private int _active;
+    private IReadOnlyList<CommandItem> _all = Array.Empty<CommandItem>();
+    private List<CommandItem> _results = [];
+    private ElementReference _input;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<CommandPalette>? _self;
+    private bool _focusNext;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _self = DotNetObjectReference.Create(this);
+            _module = await JS.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/ColorlibHQ.AdminLTE.AspNetCore/js/adminlte-blazor.js");
+            await _module.InvokeVoidAsync("registerCommandPalette", _self);
+        }
+
+        if (_focusNext)
+        {
+            _focusNext = false;
+            await _input.FocusAsync();
+        }
+    }
+
+    /// <summary>Opens the palette. Invoked from JS (⌘K) and from the topbar search pill.</summary>
+    [JSInvokable]
+    public async Task OpenPalette()
+    {
+        _all = await MenuService.GetCommandsAsync(User);
+        _query = string.Empty;
+        _active = 0;
+        Filter();
+        _open = true;
+        _focusNext = true;
+        StateHasChanged();
+    }
+
+    private void Close() => _open = false;
+
+    private void Filter()
+    {
+        _results = string.IsNullOrWhiteSpace(_query)
+            ? _all.Take(20).ToList()
+            : _all.Where(c => c.Label.Contains(_query, StringComparison.OrdinalIgnoreCase)
+                              || (c.Group?.Contains(_query, StringComparison.OrdinalIgnoreCase) ?? false))
+                  .Take(20).ToList();
+        if (_active >= _results.Count)
+            _active = Math.Max(0, _results.Count - 1);
+    }
+
+    protected override void OnParametersSet() => Filter();
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                _active = _results.Count == 0 ? 0 : (_active + 1) % _results.Count;
+                break;
+            case "ArrowUp":
+                _active = _results.Count == 0 ? 0 : (_active - 1 + _results.Count) % _results.Count;
+                break;
+            case "Enter" when _active < _results.Count && _results.Count > 0:
+                Go(_results[_active]);
+                break;
+            case "Escape":
+                Close();
+                break;
+            default:
+                Filter();
+                break;
+        }
+    }
+
+    private void Go(CommandItem item)
+    {
+        Close();
+        Navigation.NavigateTo(item.Href);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.InvokeVoidAsync("unregisterCommandPalette");
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+        _self?.Dispose();
+    }
+}

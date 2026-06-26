@@ -1,0 +1,52 @@
+@* Content wrapper with an optional page header (title + breadcrumbs). *@
+
+@if (!string.IsNullOrEmpty(Title) || Breadcrumbs is { Count: > 0 } || HeaderContent is not null)
+{
+    <div class="app-content-header">
+        <div class="@ContainerClass">
+            <div class="row">
+                <div class="col-sm-6">
+                    @if (HeaderContent is not null)
+                    {
+                        @HeaderContent
+                    }
+                    else
+                    {
+                        <h3 class="mb-0">@Title</h3>
+                    }
+                </div>
+                @if (Breadcrumbs is { Count: > 0 })
+                {
+                    <div class="col-sm-6">
+                        <Breadcrumb Items="Breadcrumbs" Class="float-sm-end" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="app-content">
+    <div class="@ContainerClass">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    /// <summary>Page title shown in the content header.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Optional breadcrumb trail shown on the right of the header.</summary>
+    [Parameter] public IReadOnlyList<Breadcrumb.Crumb>? Breadcrumbs { get; set; }
+
+    /// <summary>Use a full-width <c>container-fluid</c> (default) instead of <c>container-lg</c>.</summary>
+    [Parameter] public bool Fluid { get; set; } = true;
+
+    /// <summary>Override the header (replaces the title).</summary>
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
+
+    /// <summary>The page body.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string ContainerClass => Fluid ? "container-fluid" : "container-lg";
+}

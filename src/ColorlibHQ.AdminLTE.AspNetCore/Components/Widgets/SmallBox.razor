@@ -1,0 +1,49 @@
+@* AdminLTE small-box stat widget. *@
+
+<div class="small-box text-bg-@Theme">
+    <div class="inner">
+        <h3>@Title</h3>
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <p>@Text</p>
+        }
+        @ChildContent
+    </div>
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <i class="small-box-icon bi @Icon"></i>
+    }
+    @if (!string.IsNullOrEmpty(Url))
+    {
+        <a href="@Url" class="small-box-footer @LinkColor">
+            @UrlText <i class="bi bi-link-45deg"></i>
+        </a>
+    }
+</div>
+
+@code {
+    /// <summary>The big stat / number.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Label under the stat.</summary>
+    [Parameter] public string? Text { get; set; }
+
+    /// <summary>Bootstrap Icons class (floated large icon).</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "primary";
+
+    /// <summary>"More info" link target.</summary>
+    [Parameter] public string? Url { get; set; }
+
+    /// <summary>"More info" link text.</summary>
+    [Parameter] public string UrlText { get; set; } = "More info";
+
+    /// <summary>Extra content inside the inner block.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Light themes need a dark footer link for contrast.
+    private string LinkColor =>
+        Theme is "warning" or "light" or "info" ? "link-dark" : "link-light";
+}

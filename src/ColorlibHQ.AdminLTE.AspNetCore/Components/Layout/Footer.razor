@@ -1,0 +1,33 @@
+@* App footer. *@
+<footer class="app-footer">
+    @if (RightContent is not null)
+    {
+        <div class="float-end d-none d-sm-inline">@RightContent</div>
+    }
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <strong>
+            Copyright &copy; 2014-@Year&nbsp;
+            <a href="https://adminlte.io" class="text-decoration-none">@FooterText</a>.
+        </strong>
+        <span> All rights reserved.</span>
+    }
+</footer>
+
+@code {
+    /// <summary>Linked attribution text (defaults to AdminLTE.io).</summary>
+    [Parameter] public string FooterText { get; set; } = "AdminLTE.io";
+
+    /// <summary>Copyright end-year.</summary>
+    [Parameter] public int Year { get; set; } = DateTime.UtcNow.Year;
+
+    /// <summary>Right-aligned content (e.g. a version string).</summary>
+    [Parameter] public RenderFragment? RightContent { get; set; }
+
+    /// <summary>Override the whole footer body.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

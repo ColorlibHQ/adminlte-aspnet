@@ -1,0 +1,86 @@
+@* Renders one menu node: a header, a leaf link, or a collapsible treeview group.
+   Recursive — groups render their children as nested SidebarNavItem instances. *@
+
+@if (Item.IsHeader)
+{
+    <li class="nav-header">@Item.Header</li>
+}
+else if (Item.HasChildren)
+{
+    <li class="nav-item @(_open ? "menu-open" : null)">
+        <a href="#" class="nav-link @(ContainsActive(Item) ? "active" : null)"
+           @onclick="Toggle" @onclick:preventDefault>
+            @if (!string.IsNullOrEmpty(Item.Icon))
+            {
+                <i class="nav-icon @Item.Icon"></i>
+            }
+            <p>
+                @Item.Text
+                <i class="nav-arrow bi bi-chevron-right"></i>
+                @if (!string.IsNullOrEmpty(Item.Badge))
+                {
+                    <span class="nav-badge badge text-bg-@Item.BadgeColor">@Item.Badge</span>
+                }
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            @foreach (var child in Item.Children)
+            {
+                <SidebarNavItem Item="child" CurrentPath="@CurrentPath" />
+            }
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a href="@Item.ResolvedHref" target="@Item.Target"
+           class="nav-link @(IsActive(Item) ? "active" : null)">
+            @if (!string.IsNullOrEmpty(Item.Icon))
+            {
+                <i class="nav-icon @Item.Icon @(string.IsNullOrEmpty(Item.IconColor) ? null : $"text-{Item.IconColor}")"></i>
+            }
+            <p>
+                @Item.Text
+                @if (!string.IsNullOrEmpty(Item.Badge))
+                {
+                    <span class="nav-badge badge text-bg-@Item.BadgeColor">@Item.Badge</span>
+                }
+            </p>
+        </a>
+    </li>
+}
+
+@code {
+    /// <summary>The menu node to render.</summary>
+    [Parameter, EditorRequired] public MenuItem Item { get; set; } = default!;
+
+    /// <summary>Current request path, used to highlight the active item.</summary>
+    [Parameter] public string CurrentPath { get; set; } = "/";
+
+    private bool _open;
+
+    protected override void OnParametersSet() => _open = ContainsActive(Item);
+
+    private void Toggle() => _open = !_open;
+
+    private bool IsActive(MenuItem item)
+    {
+        var href = item.ResolvedHref;
+        if (href is "#" or "")
+            return false;
+
+        var path = NormalizePath(href);
+        var current = NormalizePath(CurrentPath);
+        return string.Equals(path, current, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool ContainsActive(MenuItem item) =>
+        item.HasChildren ? item.Children.Any(ContainsActive) : IsActive(item);
+
+    private static string NormalizePath(string url)
+    {
+        var path = url.Split('?')[0].Split('#')[0].TrimEnd('/');
+        return path.Length == 0 ? "/" : path;
+    }
+}

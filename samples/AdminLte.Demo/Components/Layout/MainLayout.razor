@@ -1,0 +1,18 @@
+@* The demo's layout — wraps every page in the AdminLTE dashboard shell.
+   Branding, menu, color mode and command palette all come from the RCL. *@
+@inherits LayoutComponentBase
+
+<DashboardLayout User="_user">
+    @Body
+</DashboardLayout>
+
+@code {
+    private readonly TopbarUser _user = new()
+    {
+        Name = "Alex Rivera",
+        Role = "Administrator",
+        AvatarUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=160",
+        ProfileUrl = "/profile",
+        LogoutUrl = "/login",
+    };
+}

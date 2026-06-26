@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Shared defaults across all projects in this repo. TargetFramework is set per-project. -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>14.0</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

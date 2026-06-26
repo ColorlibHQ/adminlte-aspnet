@@ -1,0 +1,118 @@
+@* AdminLTE card with optional header, tools (collapse/maximize/remove) and footer. *@
+
+<div class="card @CardThemeClass @(_collapsed ? "collapsed-card" : null)">
+    @if (!string.IsNullOrEmpty(Title) || HeaderContent is not null || Tools is not null
+         || Collapsible || Maximizable || Removable)
+    {
+        <div class="card-header @HeaderClass">
+            @if (HeaderContent is not null)
+            {
+                @HeaderContent
+            }
+            else
+            {
+                <h3 class="card-title">
+                    @if (!string.IsNullOrEmpty(Icon))
+                    {
+                        <i class="@Icon me-2"></i>
+                    }
+                    @Title
+                </h3>
+            }
+            <div class="card-tools">
+                @Tools
+                @if (Collapsible)
+                {
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"
+                            @onclick="() => _collapsed = !_collapsed" aria-label="Collapse">
+                        <i class="bi @(_collapsed ? "bi-plus-lg" : "bi-dash-lg")"></i>
+                    </button>
+                }
+                @if (Maximizable)
+                {
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-maximize"
+                            aria-label="Maximize">
+                        <i class="bi bi-fullscreen"></i>
+                    </button>
+                }
+                @if (Removable)
+                {
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"
+                            aria-label="Remove">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    }
+    <div class="card-body @BodyClass">
+        @ChildContent
+    </div>
+    @if (FooterContent is not null)
+    {
+        <div class="card-footer @FooterClass">
+            @FooterContent
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Header title.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Bootstrap Icons class shown before the title.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Bootstrap theme color, e.g. <c>primary</c>, <c>success</c>.</summary>
+    [Parameter] public string? Theme { get; set; }
+
+    /// <summary>Visual style: <c>default</c> (colored header), <c>outline</c> (top border), <c>solid</c> (full color).</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>Show a collapse toggle.</summary>
+    [Parameter] public bool Collapsible { get; set; }
+
+    /// <summary>Start collapsed.</summary>
+    [Parameter] public bool Collapsed { get; set; }
+
+    /// <summary>Show a maximize toggle.</summary>
+    [Parameter] public bool Maximizable { get; set; }
+
+    /// <summary>Show a remove button.</summary>
+    [Parameter] public bool Removable { get; set; }
+
+    [Parameter] public string? HeaderClass { get; set; }
+    [Parameter] public string? BodyClass { get; set; }
+    [Parameter] public string? FooterClass { get; set; }
+
+    /// <summary>Override the header (replaces title).</summary>
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
+
+    /// <summary>Extra buttons in the header tools area.</summary>
+    [Parameter] public RenderFragment? Tools { get; set; }
+
+    /// <summary>Footer content.</summary>
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    /// <summary>Card body.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _collapsed;
+
+    protected override void OnInitialized() => _collapsed = Collapsed;
+
+    private string CardThemeClass
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(Theme))
+                return string.Empty;
+            return Variant switch
+            {
+                "outline" => $"card-outline card-{Theme}",
+                "solid" => $"text-bg-{Theme}",
+                _ => $"card-{Theme}",
+            };
+        }
+    }
+}

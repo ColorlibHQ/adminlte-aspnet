@@ -1,0 +1,85 @@
+@* AdminLTE box-profile user card. *@
+<div class="card card-primary card-outline @Class">
+    <div class="card-body box-profile">
+        <div class="text-center">
+            @if (!string.IsNullOrEmpty(Image))
+            {
+                <img src="@Image" alt="@(ImageAlt ?? Name)"
+                     class="profile-user-img img-fluid img-circle rounded-circle shadow"
+                     width="100" height="100" />
+            }
+        </div>
+        <h3 class="profile-username text-center">@Name</h3>
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <p class="text-body-secondary text-center">@Title</p>
+        }
+        @if (Stats is { Count: > 0 })
+        {
+            <ul class="list-group list-group-unbordered mb-3">
+                @foreach (var stat in Stats)
+                {
+                    <li class="list-group-item">
+                        <b>@stat.Label</b> <span class="float-end">@stat.Value</span>
+                    </li>
+                }
+            </ul>
+        }
+        @if (Socials is { Count: > 0 })
+        {
+            <div class="text-center mb-3">
+                @foreach (var social in Socials)
+                {
+                    <a href="@SafeHref(social.Url)" class="btn btn-outline-@(social.Color ?? "secondary") btn-sm me-1"
+                       target="_blank" rel="noopener noreferrer" aria-label="@social.Icon">
+                        <i class="bi @social.Icon"></i>
+                    </a>
+                }
+            </div>
+        }
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    /// <summary>A profile statistic.</summary>
+    public sealed record Stat(string Label, string Value);
+
+    /// <summary>A social link.</summary>
+    public sealed record Social(string Icon, string Url, string? Color = null);
+
+    /// <summary>User display name.</summary>
+    [Parameter, EditorRequired] public string Name { get; set; } = string.Empty;
+
+    /// <summary>Job title / role.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Avatar image URL.</summary>
+    [Parameter] public string? Image { get; set; }
+
+    /// <summary>Avatar alt text (defaults to <see cref="Name"/>).</summary>
+    [Parameter] public string? ImageAlt { get; set; }
+
+    /// <summary>Profile statistics list.</summary>
+    [Parameter] public IReadOnlyList<Stat>? Stats { get; set; }
+
+    /// <summary>Social links.</summary>
+    [Parameter] public IReadOnlyList<Social>? Socials { get; set; }
+
+    /// <summary>Extra classes on the card.</summary>
+    [Parameter] public string? Class { get; set; }
+
+    /// <summary>Extra body content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Reject dangerous URL schemes (mirrors the Laravel port).
+    private static string SafeHref(string url)
+    {
+        var trimmed = url.TrimStart();
+        return trimmed.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("data:", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("vbscript:", StringComparison.OrdinalIgnoreCase)
+            ? "#"
+            : url;
+    }
+}

@@ -1,0 +1,68 @@
+@page "/forms/general"
+@* Demonstrates the AdminLTE form components inside a Blazor EditForm. *@
+
+<PageTitle>Forms · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Forms" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Contact" Theme="primary" Variant="outline">
+                <EditForm Model="_model" OnValidSubmit="Submit">
+                    <DataAnnotationsValidator />
+                    <Input Label="Name" @bind-Value="_model.Name" Placeholder="Jane Doe" />
+                    <Input Label="Email" Type="email" @bind-Value="_model.Email"
+                           Prepend="@@" Placeholder="jane@example.com" />
+                    <Select Label="Department" @bind-Value="_model.Department"
+                            Options="_departments" />
+                    <Textarea Label="Message" @bind-Value="_model.Message" Rows="4" />
+                    <InputSwitch Label="Subscribe to the newsletter" @bind-Value="_model.Subscribe" />
+                    <div class="mt-3 d-flex gap-2">
+                        <Button Type="submit" Theme="primary" Icon="bi-send" Label="Send" />
+                        <Button Theme="secondary" Outline="true" Label="Cancel" OnClick="Reset" />
+                    </div>
+                </EditForm>
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="Submitted value" Theme="secondary" Variant="outline">
+                @if (_submitted)
+                {
+                    <Alert Theme="success" Icon="bi-check-circle-fill">Form submitted.</Alert>
+                }
+                <pre class="mb-0">@($"Name: {_model.Name}\nEmail: {_model.Email}\nDept: {_model.Department}\nSubscribe: {_model.Subscribe}\n\n{_model.Message}")</pre>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Forms"), new("General")];
+
+    private readonly IReadOnlyList<Select.Option> _departments =
+    [
+        new("sales", "Sales"),
+        new("support", "Support"),
+        new("billing", "Billing"),
+    ];
+
+    private ContactModel _model = new();
+    private bool _submitted;
+
+    private void Submit() => _submitted = true;
+
+    private void Reset()
+    {
+        _model = new ContactModel();
+        _submitted = false;
+    }
+
+    private sealed class ContactModel
+    {
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string Department { get; set; } = "sales";
+        public string? Message { get; set; }
+        public bool Subscribe { get; set; } = true;
+    }
+}

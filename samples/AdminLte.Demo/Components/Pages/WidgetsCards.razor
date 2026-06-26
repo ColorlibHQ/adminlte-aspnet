@@ -1,0 +1,34 @@
+@page "/widgets/cards"
+
+<PageTitle>Cards · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Cards" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-4">
+            <Card Title="Default" Theme="primary">Solid-header card.</Card>
+        </div>
+        <div class="col-md-4">
+            <Card Title="Outline" Theme="success" Variant="outline">Top-border card.</Card>
+        </div>
+        <div class="col-md-4">
+            <Card Title="Solid" Theme="info" Variant="solid">Fully colored card.</Card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Collapsible" Theme="warning" Variant="outline" Collapsible="true" Maximizable="true">
+                Try the header tools. AdminLTE's CardWidget plugin handles collapse / maximize.
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="Removable" Theme="danger" Variant="outline" Removable="true">
+                The X button removes this card.
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Widgets"), new("Cards")];
+}
