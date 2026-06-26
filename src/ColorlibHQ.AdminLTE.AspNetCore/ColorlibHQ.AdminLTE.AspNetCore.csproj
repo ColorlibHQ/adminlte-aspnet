@@ -15,7 +15,7 @@
   <!-- NuGet package metadata -->
   <PropertyGroup>
     <PackageId>ColorlibHQ.AdminLTE.AspNetCore</PackageId>
-    <Version>0.9.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Colorlib</Authors>
     <Company>Colorlib</Company>
     <Product>AdminLTE 4 for ASP.NET Core</Product>
