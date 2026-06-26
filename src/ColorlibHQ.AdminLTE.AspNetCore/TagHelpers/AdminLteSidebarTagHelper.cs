@@ -37,8 +37,7 @@ public sealed class AdminLteSidebarTagHelper(
         sb.Append($"""<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="{enc.Encode(theme)}">""");
 
         // Brand
-        sb.Append("""<div class="sidebar-brand"><a href="""")
-          .Append(enc.Encode(_options.BrandUrl)).Append("""" class="brand-link">""");
+        sb.Append($"""<div class="sidebar-brand"><a href="{enc.Encode(_options.BrandUrl)}" class="brand-link">""");
         if (!string.IsNullOrEmpty(_options.LogoImage))
             sb.Append($"""<img src="{enc.Encode(_options.LogoImage)}" alt="{enc.Encode(_options.BrandText)}" class="brand-image opacity-75 shadow">""");
         else

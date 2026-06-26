@@ -1,17 +1,17 @@
 @* Light / Dark / Auto color-mode dropdown. Persists to localStorage via ColorModeService. *@
 @implements IDisposable
-@inject ColorModeService ColorMode
+@inject ColorModeService ColorModeSvc
 
 <li class="nav-item dropdown">
     <button id="bd-theme" class="nav-link" type="button"
             aria-label="Toggle color scheme" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi @ColorMode.Current.ToIcon()" aria-hidden="true"></i>
+        <i class="bi @ColorModeSvc.Current.ToIcon()" aria-hidden="true"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme"
         style="--bs-dropdown-min-width: 8rem;">
         @foreach (var mode in _modes)
         {
-            var selected = ColorMode.Current == mode;
+            var selected = ColorModeSvc.Current == mode;
             <li>
                 <button type="button"
                         class="dropdown-item d-flex align-items-center @(selected ? "active" : null)"
@@ -32,18 +32,18 @@
     private static readonly ColorMode[] _modes =
         [ColorMode.Light, ColorMode.Dark, ColorMode.Auto];
 
-    protected override void OnInitialized() => ColorMode.Changed += OnChanged;
+    protected override void OnInitialized() => ColorModeSvc.Changed += OnChanged;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             // Read persisted preference once the circuit is interactive.
-            await ColorMode.InitializeAsync();
+            await ColorModeSvc.InitializeAsync();
         }
     }
 
-    private Task SelectAsync(ColorMode mode) => ColorMode.SetAsync(mode).AsTask();
+    private Task SelectAsync(ColorMode mode) => ColorModeSvc.SetAsync(mode).AsTask();
 
     private static string Label(ColorMode mode) => mode switch
     {
@@ -54,5 +54,5 @@
 
     private void OnChanged() => InvokeAsync(StateHasChanged);
 
-    public void Dispose() => ColorMode.Changed -= OnChanged;
+    public void Dispose() => ColorModeSvc.Changed -= OnChanged;
 }
