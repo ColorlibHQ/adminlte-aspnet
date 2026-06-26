@@ -1,0 +1,49 @@
+@* Bootstrap accordion. Wraps <AccordionItem> children. *@
+
+<CascadingValue Value="this" IsFixed="true">
+    <div class="accordion @(Flush ? "accordion-flush" : null)">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    /// <summary>Remove the default borders / rounded corners.</summary>
+    [Parameter] public bool Flush { get; set; }
+
+    /// <summary>Allow more than one item open at a time.</summary>
+    [Parameter] public bool AlwaysOpen { get; set; }
+
+    /// <summary>The <see cref="AccordionItem"/> children.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private readonly HashSet<string> _open = new();
+
+    internal bool IsOpen(string id) => _open.Contains(id);
+
+    internal void RegisterDefault(string id)
+    {
+        if (AlwaysOpen)
+        {
+            _open.Add(id);
+        }
+        else if (_open.Count == 0)
+        {
+            _open.Add(id);
+        }
+    }
+
+    internal void Toggle(string id)
+    {
+        if (_open.Contains(id))
+        {
+            _open.Remove(id);
+        }
+        else
+        {
+            if (!AlwaysOpen)
+                _open.Clear();
+            _open.Add(id);
+        }
+        StateHasChanged();
+    }
+}

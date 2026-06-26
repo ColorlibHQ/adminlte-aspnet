@@ -1,0 +1,100 @@
+@* AdminLTE/Bootstrap tab set. Wraps <Tab> children; renders the nav + panes. *@
+
+<CascadingValue Value="this" IsFixed="true">
+    @* Children register themselves during this first render pass. *@
+    <div style="display:none">@ChildContent</div>
+
+    <div>
+        <ul class="nav @(Pills ? "nav-pills" : "nav-tabs") @(Justified ? "nav-justified" : null)" role="tablist">
+            @foreach (var tab in _tabs)
+            {
+                <li class="nav-item" role="presentation">
+                    <button type="button"
+                            class="nav-link @(IsActive(tab.Id) ? "active" : null) @(tab.Disabled ? "disabled" : null)"
+                            role="tab" aria-selected="@IsActive(tab.Id)" disabled="@tab.Disabled"
+                            @onclick="() => Select(tab.Id)">
+                        @if (!string.IsNullOrEmpty(tab.Icon))
+                        {
+                            <i class="bi @tab.Icon me-1"></i>
+                        }
+                        @tab.Title
+                    </button>
+                </li>
+            }
+        </ul>
+        <div class="tab-content pt-3">
+            @TabPanes
+        </div>
+    </div>
+</CascadingValue>
+
+@code {
+    /// <summary>Metadata for one registered tab.</summary>
+    internal sealed class TabMeta
+    {
+        public required string Id { get; init; }
+        public required string Title { get; set; }
+        public string? Icon { get; set; }
+        public bool Disabled { get; set; }
+        public RenderFragment? Content { get; set; }
+    }
+
+    /// <summary>The active tab id (two-way bindable).</summary>
+    [Parameter] public string? ActiveId { get; set; }
+
+    /// <summary>Raised when the active tab changes.</summary>
+    [Parameter] public EventCallback<string> ActiveIdChanged { get; set; }
+
+    /// <summary>Render as pills instead of underlined tabs.</summary>
+    [Parameter] public bool Pills { get; set; }
+
+    /// <summary>Stretch tabs to fill the available width.</summary>
+    [Parameter] public bool Justified { get; set; }
+
+    /// <summary>The <see cref="Tab"/> children.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private readonly List<TabMeta> _tabs = new();
+    private string? _current;
+
+    private bool IsActive(string id) => _current == id;
+
+    private RenderFragment TabPanes => builder =>
+    {
+        foreach (var tab in _tabs)
+        {
+            var active = IsActive(tab.Id);
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", $"tab-pane fade{(active ? " show active" : "")}");
+            builder.AddAttribute(2, "role", "tabpanel");
+            if (!active)
+                builder.AddAttribute(3, "style", "display:none");
+            builder.AddContent(4, tab.Content);
+            builder.CloseElement();
+        }
+    };
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(ActiveId))
+            _current = ActiveId;
+    }
+
+    internal void Register(TabMeta tab)
+    {
+        if (_tabs.Any(t => t.Id == tab.Id))
+            return;
+        _tabs.Add(tab);
+        _current ??= tab.Id;
+        StateHasChanged();
+    }
+
+    private async Task Select(string id)
+    {
+        if (_current == id)
+            return;
+        _current = id;
+        await ActiveIdChanged.InvokeAsync(id);
+        StateHasChanged();
+    }
+}

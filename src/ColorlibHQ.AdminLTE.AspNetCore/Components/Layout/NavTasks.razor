@@ -1,0 +1,55 @@
+@* Topbar tasks dropdown with per-task progress bars. Drop inside a navbar <ul>. *@
+
+<li class="nav-item dropdown">
+    <a class="nav-link" data-bs-toggle="dropdown" href="#">
+        <i class="bi bi-list-check"></i>
+        @if (Tasks.Count > 0)
+        {
+            <span class="navbar-badge badge text-bg-@BadgeColor">@(Count ?? Tasks.Count.ToString())</span>
+        }
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        <span class="dropdown-item dropdown-header">@Tasks.Count Tasks</span>
+        @foreach (var task in Tasks)
+        {
+            <div class="dropdown-divider"></div>
+            <a href="@(string.IsNullOrEmpty(task.Url) ? "#" : task.Url)" class="dropdown-item">
+                <h3 class="dropdown-item-title">
+                    @task.Text
+                    <span class="float-end fs-7">@task.Progress%</span>
+                </h3>
+                <div class="progress progress-sm">
+                    <div class="progress-bar bg-@(task.Theme ?? BadgeColor)" style="width:@task.Progress%"></div>
+                </div>
+            </a>
+        }
+        <div class="dropdown-divider"></div>
+        <a href="@SeeAllUrl" class="dropdown-item dropdown-footer">@SeeAllText</a>
+    </div>
+</li>
+
+@code {
+    /// <summary>One task row.</summary>
+    public sealed class TaskItem
+    {
+        public string Text { get; set; } = string.Empty;
+        public int Progress { get; set; }
+        public string? Theme { get; set; }
+        public string? Url { get; set; }
+    }
+
+    /// <summary>The tasks to list.</summary>
+    [Parameter] public IReadOnlyList<TaskItem> Tasks { get; set; } = Array.Empty<TaskItem>();
+
+    /// <summary>Badge theme color.</summary>
+    [Parameter] public string BadgeColor { get; set; } = "success";
+
+    /// <summary>Override the badge text (defaults to the task count).</summary>
+    [Parameter] public string? Count { get; set; }
+
+    /// <summary>"View all" footer link target.</summary>
+    [Parameter] public string SeeAllUrl { get; set; } = "#";
+
+    /// <summary>"View all" footer link text.</summary>
+    [Parameter] public string SeeAllText { get; set; } = "View All Tasks";
+}

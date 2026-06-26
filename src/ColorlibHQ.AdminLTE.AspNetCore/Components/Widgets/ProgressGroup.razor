@@ -1,0 +1,24 @@
+@* AdminLTE progress-group — a labelled value/max row with a thin progress bar. *@
+<div class="progress-group">
+    <span class="progress-text">@Label</span>
+    <span class="float-end"><b>@Value</b>/@Max</span>
+    <div class="progress progress-sm">
+        <div class="progress-bar bg-@Theme" style="width:@(Percent)%"></div>
+    </div>
+</div>
+
+@code {
+    /// <summary>Row label shown on the left.</summary>
+    [Parameter, EditorRequired] public string Label { get; set; } = string.Empty;
+
+    /// <summary>Current value.</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Maximum value.</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "primary";
+
+    private int Percent => Max <= 0 ? 0 : (int)Math.Round(Math.Clamp(Value / Max, 0, 1) * 100);
+}

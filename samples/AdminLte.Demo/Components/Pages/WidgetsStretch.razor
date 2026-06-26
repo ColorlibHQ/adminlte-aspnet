@@ -1,0 +1,91 @@
+@page "/widgets/stretch"
+@* Dogfoods the stretch widget set: progress groups, ratings, direct chat,
+   tabs and an accordion. The topbar message/notification/task dropdowns are
+   wired in MainLayout. *@
+
+<PageTitle>Stretch Widgets · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Stretch Widgets" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Progress groups" Icon="bi-bar-chart-steps" Theme="primary" Variant="outline">
+                <ProgressGroup Label="Add Products to Cart" Value="160" Max="200" Theme="primary" />
+                <ProgressGroup Label="Complete Purchase" Value="310" Max="400" Theme="danger" />
+                <ProgressGroup Label="Visit Premium Page" Value="480" Max="800" Theme="success" />
+                <ProgressGroup Label="Send Inquiries" Value="250" Max="500" Theme="warning" />
+            </Card>
+
+            <Card Title="Ratings" Icon="bi-star" Theme="warning" Variant="outline">
+                <p class="mb-1"><Ratings Value="5" ShowText="true" /></p>
+                <p class="mb-1"><Ratings Value="3.5" Theme="warning" ShowText="true" /></p>
+                <p class="mb-0"><Ratings Value="4" Max="6" Theme="info" /></p>
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <DirectChat Title="Direct Chat" Theme="primary" Badge="3" Messages="_messages" Contacts="_contacts">
+                <FooterContent>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Type a Message ..." />
+                        <button type="button" class="btn btn-primary">Send</button>
+                    </div>
+                </FooterContent>
+            </DirectChat>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Tabs" Icon="bi-segmented-nav" Theme="info" Variant="outline">
+                <Tabs @bind-ActiveId="_activeTab">
+                    <Tab Id="home" Title="Home" Icon="bi-house">
+                        <p>The home tab is selected by default.</p>
+                    </Tab>
+                    <Tab Id="profile" Title="Profile" Icon="bi-person">
+                        <p>Profile tab content goes here.</p>
+                    </Tab>
+                    <Tab Id="settings" Title="Settings" Icon="bi-gear" Disabled="true">
+                        <p>Disabled tab.</p>
+                    </Tab>
+                </Tabs>
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <Card Title="Accordion" Icon="bi-list-nested" Theme="secondary" Variant="outline">
+                <Accordion>
+                    <AccordionItem Id="one" Title="Accordion Item #1" DefaultOpen="true">
+                        Shown by default. Only one panel opens at a time.
+                    </AccordionItem>
+                    <AccordionItem Id="two" Title="Accordion Item #2">
+                        Click a header to expand it; the previously open panel collapses.
+                    </AccordionItem>
+                    <AccordionItem Id="three" Title="Accordion Item #3">
+                        Set <code>AlwaysOpen</code> on the parent to allow multiple open panels.
+                    </AccordionItem>
+                </Accordion>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Widgets"), new("Stretch")];
+
+    private string _activeTab = "home";
+
+    private readonly IReadOnlyList<DirectChat.Message> _messages =
+    [
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 2:00 pm", Text = "Is this template really for free? That's unbelievable!", Image = "https://www.gravatar.com/avatar/1?d=mp&s=80" },
+        new() { From = "Sarah Bullock", Timestamp = "23 Jan 2:05 pm", Text = "You better believe it!", IsOwn = true, Image = "https://www.gravatar.com/avatar/2?d=mp&s=80" },
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 5:37 pm", Text = "Working on a great new AdminLTE release.", Image = "https://www.gravatar.com/avatar/1?d=mp&s=80" },
+    ];
+
+    private readonly IReadOnlyList<DirectChat.Contact> _contacts =
+    [
+        new() { Name = "Count Dracula", Date = "2/28/2026", Preview = "How have you been?", Image = "https://www.gravatar.com/avatar/3?d=mp&s=80" },
+        new() { Name = "Sarah Doe", Date = "2/23/2026", Preview = "I'll be in the neighborhood.", Image = "https://www.gravatar.com/avatar/4?d=mp&s=80" },
+        new() { Name = "Nora Doe", Date = "2/18/2026", Preview = "Lets have a meeting tomorrow.", Image = "https://www.gravatar.com/avatar/5?d=mp&s=80" },
+    ];
+}

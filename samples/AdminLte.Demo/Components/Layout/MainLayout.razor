@@ -3,10 +3,38 @@
 @inherits LayoutComponentBase
 
 <DashboardLayout User="_user">
-    @Body
+    <TopbarEnd>
+        <NavMessages Messages="_messages" />
+        <NavNotifications Notifications="_notifications" />
+        <NavTasks Tasks="_tasks" />
+    </TopbarEnd>
+    <ChildContent>
+        @Body
+    </ChildContent>
 </DashboardLayout>
 
 @code {
+    private readonly IReadOnlyList<NavMessages.Message> _messages =
+    [
+        new() { From = "Brad Diesel", Text = "Call me whenever you can...", Time = "4 Hours Ago", Star = "warning", Image = "https://www.gravatar.com/avatar/6?d=mp&s=80" },
+        new() { From = "John Pierce", Text = "I got your message bro", Time = "4 Hours Ago", Image = "https://www.gravatar.com/avatar/7?d=mp&s=80" },
+        new() { From = "Nora Silvester", Text = "The subject goes here", Time = "4 Hours Ago", Star = "warning", Image = "https://www.gravatar.com/avatar/8?d=mp&s=80" },
+    ];
+
+    private readonly IReadOnlyList<NavNotifications.Notification> _notifications =
+    [
+        new() { Text = "4 new members joined", Icon = "bi-people-fill", IconTheme = "primary", Time = "3 mins" },
+        new() { Text = "12 new reports", Icon = "bi-file-earmark-text-fill", IconTheme = "info", Time = "12 hours" },
+        new() { Text = "3 new updates", Icon = "bi-arrow-up-circle-fill", IconTheme = "success", Time = "2 days" },
+    ];
+
+    private readonly IReadOnlyList<NavTasks.TaskItem> _tasks =
+    [
+        new() { Text = "Design new dashboard", Progress = 75, Theme = "danger" },
+        new() { Text = "Create new release", Progress = 40, Theme = "warning" },
+        new() { Text = "Update documentation", Progress = 90, Theme = "success" },
+    ];
+
     private readonly TopbarUser _user = new()
     {
         Name = "Alex Rivera",

@@ -1,0 +1,72 @@
+@* Topbar messages dropdown. Drop inside a navbar <ul>. *@
+
+<li class="nav-item dropdown">
+    <a class="nav-link" data-bs-toggle="dropdown" href="#">
+        <i class="bi bi-chat-text"></i>
+        @if (Messages.Count > 0)
+        {
+            <span class="navbar-badge badge text-bg-@BadgeColor">@(Count ?? Messages.Count.ToString())</span>
+        }
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        @foreach (var msg in Messages)
+        {
+            <a href="@(string.IsNullOrEmpty(msg.Url) ? "#" : msg.Url)" class="dropdown-item">
+                <div class="d-flex">
+                    @if (!string.IsNullOrEmpty(msg.Image))
+                    {
+                        <div class="flex-shrink-0">
+                            <img src="@msg.Image" alt="@msg.From" class="img-size-50 rounded-circle me-3" />
+                        </div>
+                    }
+                    <div class="flex-grow-1">
+                        <h3 class="dropdown-item-title">
+                            @msg.From
+                            @if (!string.IsNullOrEmpty(msg.Star))
+                            {
+                                <span class="float-end fs-7 text-@msg.Star"><i class="bi bi-star-fill"></i></span>
+                            }
+                        </h3>
+                        <p class="fs-7">@msg.Text</p>
+                        @if (!string.IsNullOrEmpty(msg.Time))
+                        {
+                            <p class="fs-7 text-secondary"><i class="bi bi-clock-fill me-1"></i> @msg.Time</p>
+                        }
+                    </div>
+                </div>
+            </a>
+            <div class="dropdown-divider"></div>
+        }
+        <a href="@SeeAllUrl" class="dropdown-item dropdown-footer">@SeeAllText</a>
+    </div>
+</li>
+
+@code {
+    /// <summary>One message row.</summary>
+    public sealed class Message
+    {
+        public string From { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+        public string? Image { get; set; }
+        public string? Url { get; set; }
+        public string? Time { get; set; }
+
+        /// <summary>Bootstrap theme for an optional starred indicator.</summary>
+        public string? Star { get; set; }
+    }
+
+    /// <summary>The messages to list.</summary>
+    [Parameter] public IReadOnlyList<Message> Messages { get; set; } = Array.Empty<Message>();
+
+    /// <summary>Badge theme color.</summary>
+    [Parameter] public string BadgeColor { get; set; } = "danger";
+
+    /// <summary>Override the badge text (defaults to the message count).</summary>
+    [Parameter] public string? Count { get; set; }
+
+    /// <summary>"See all" footer link target.</summary>
+    [Parameter] public string SeeAllUrl { get; set; } = "#";
+
+    /// <summary>"See all" footer link text.</summary>
+    [Parameter] public string SeeAllText { get; set; } = "See All Messages";
+}

@@ -1,0 +1,32 @@
+@* AdminLTE star rating — supports half stars. *@
+<div class="ratings d-inline-flex align-items-center gap-1">
+    @for (var i = 1; i <= Max; i++)
+    {
+        <i class="bi @StarClass(i) text-@Theme"></i>
+    }
+    @if (ShowText)
+    {
+        <span class="ms-2 text-secondary">@Value/@Max</span>
+    }
+</div>
+
+@code {
+    /// <summary>Current rating value (supports halves, e.g. <c>3.5</c>).</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Number of stars.</summary>
+    [Parameter] public int Max { get; set; } = 5;
+
+    /// <summary>Bootstrap theme color for the stars.</summary>
+    [Parameter] public string Theme { get; set; } = "warning";
+
+    /// <summary>Show the numeric <c>value/max</c> text after the stars.</summary>
+    [Parameter] public bool ShowText { get; set; }
+
+    private string StarClass(int n)
+    {
+        if (Value >= n) return "bi-star-fill";
+        if (Value >= n - 0.5) return "bi-star-half";
+        return "bi-star";
+    }
+}

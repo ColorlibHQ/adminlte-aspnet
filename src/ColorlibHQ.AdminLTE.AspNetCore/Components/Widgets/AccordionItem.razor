@@ -1,0 +1,42 @@
+@* One accordion panel. Must be a child of <Accordion>. *@
+
+<div class="accordion-item">
+    <h2 class="accordion-header">
+        <button type="button" class="accordion-button @(_open ? null : "collapsed")"
+                aria-expanded="@_open" @onclick="() => Parent!.Toggle(Id)">
+            @Title
+        </button>
+    </h2>
+    <div class="accordion-collapse collapse @(_open ? "show" : null)">
+        <div class="accordion-body">
+            @ChildContent
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>Unique item id.</summary>
+    [Parameter, EditorRequired] public string Id { get; set; } = string.Empty;
+
+    /// <summary>Header button text.</summary>
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+
+    /// <summary>Start expanded.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    /// <summary>Panel body.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter] private Accordion? Parent { get; set; }
+
+    private bool _open => Parent!.IsOpen(Id);
+
+    protected override void OnInitialized()
+    {
+        if (Parent is null)
+            throw new InvalidOperationException($"<{nameof(AccordionItem)}> must be used inside <{nameof(Accordion)}>.");
+
+        if (DefaultOpen)
+            Parent.RegisterDefault(Id);
+    }
+}

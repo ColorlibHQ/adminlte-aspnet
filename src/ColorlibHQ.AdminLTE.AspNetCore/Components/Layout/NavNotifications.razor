@@ -1,0 +1,55 @@
+@* Topbar notifications dropdown. Drop inside a navbar <ul>. *@
+
+<li class="nav-item dropdown">
+    <a class="nav-link" data-bs-toggle="dropdown" href="#">
+        <i class="bi bi-bell-fill"></i>
+        @if (Notifications.Count > 0)
+        {
+            <span class="navbar-badge badge text-bg-@BadgeColor">@(Count ?? Notifications.Count.ToString())</span>
+        }
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        <span class="dropdown-item dropdown-header">@(Count ?? Notifications.Count.ToString()) Notifications</span>
+        @foreach (var n in Notifications)
+        {
+            <div class="dropdown-divider"></div>
+            <a href="@(string.IsNullOrEmpty(n.Url) ? "#" : n.Url)" class="dropdown-item">
+                <i class="bi @(string.IsNullOrEmpty(n.Icon) ? "bi-info-circle" : n.Icon) @(string.IsNullOrEmpty(n.IconTheme) ? null : $"text-{n.IconTheme}") me-2"></i>
+                @n.Text
+                @if (!string.IsNullOrEmpty(n.Time))
+                {
+                    <span class="float-end text-secondary fs-7">@n.Time</span>
+                }
+            </a>
+        }
+        <div class="dropdown-divider"></div>
+        <a href="@SeeAllUrl" class="dropdown-item dropdown-footer">@SeeAllText</a>
+    </div>
+</li>
+
+@code {
+    /// <summary>One notification row.</summary>
+    public sealed class Notification
+    {
+        public string Text { get; set; } = string.Empty;
+        public string? Icon { get; set; }
+        public string? IconTheme { get; set; }
+        public string? Time { get; set; }
+        public string? Url { get; set; }
+    }
+
+    /// <summary>The notifications to list.</summary>
+    [Parameter] public IReadOnlyList<Notification> Notifications { get; set; } = Array.Empty<Notification>();
+
+    /// <summary>Badge theme color.</summary>
+    [Parameter] public string BadgeColor { get; set; } = "warning";
+
+    /// <summary>Override the badge / header count text.</summary>
+    [Parameter] public string? Count { get; set; }
+
+    /// <summary>"See all" footer link target.</summary>
+    [Parameter] public string SeeAllUrl { get; set; } = "#";
+
+    /// <summary>"See all" footer link text.</summary>
+    [Parameter] public string SeeAllText { get; set; } = "See All Notifications";
+}

@@ -1,0 +1,129 @@
+@* AdminLTE direct-chat — a messaging card with a sliding contacts panel. *@
+
+<div class="card direct-chat direct-chat-@Theme @(_contactsOpen ? "direct-chat-contacts-open" : null)">
+    <div class="card-header">
+        <h3 class="card-title">@Title</h3>
+        <div class="card-tools">
+            @if (!string.IsNullOrEmpty(Badge))
+            {
+                <span class="badge text-bg-@Theme">@Badge</span>
+            }
+            <button type="button" class="btn btn-tool" title="Contacts"
+                    @onclick="() => _contactsOpen = !_contactsOpen">
+                <i class="bi bi-person-lines-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="direct-chat-messages">
+            @if (MessagesContent is not null)
+            {
+                @MessagesContent
+            }
+            else
+            {
+                @foreach (var msg in Messages)
+                {
+                    <div class="direct-chat-msg @(msg.IsOwn ? "end" : null)">
+                        <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name @(msg.IsOwn ? "float-end" : "float-start")">@msg.From</span>
+                            <span class="direct-chat-timestamp @(msg.IsOwn ? "float-start" : "float-end")">@msg.Timestamp</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(msg.Image))
+                        {
+                            <img class="direct-chat-img" src="@msg.Image" alt="@msg.From" />
+                        }
+                        <div class="direct-chat-text">@msg.Text</div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="direct-chat-contacts">
+            @if (ContactsContent is not null)
+            {
+                @ContactsContent
+            }
+            else
+            {
+                <ul class="contacts-list">
+                    @foreach (var c in Contacts)
+                    {
+                        <li>
+                            <a href="#">
+                                @if (!string.IsNullOrEmpty(c.Image))
+                                {
+                                    <img class="contacts-list-img" src="@c.Image" alt="@c.Name" />
+                                }
+                                <div class="contacts-list-info">
+                                    <span class="contacts-list-name">
+                                        @c.Name
+                                        <small class="contacts-list-date float-end">@c.Date</small>
+                                    </span>
+                                    <span class="contacts-list-msg">@c.Preview</span>
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    @if (FooterContent is not null)
+    {
+        <div class="card-footer">
+            @FooterContent
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>One chat message.</summary>
+    public sealed class Message
+    {
+        public string From { get; set; } = string.Empty;
+        public string? Image { get; set; }
+        public string? Timestamp { get; set; }
+        public string Text { get; set; } = string.Empty;
+
+        /// <summary>True for messages sent by the current user (aligned right).</summary>
+        public bool IsOwn { get; set; }
+    }
+
+    /// <summary>One contact in the slide-out panel.</summary>
+    public sealed class Contact
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? Image { get; set; }
+        public string? Date { get; set; }
+        public string? Preview { get; set; }
+    }
+
+    /// <summary>Card header title.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Bootstrap theme color.</summary>
+    [Parameter] public string Theme { get; set; } = "primary";
+
+    /// <summary>Optional badge shown in the header tools (e.g. unread count).</summary>
+    [Parameter] public string? Badge { get; set; }
+
+    /// <summary>Messages to render (ignored when <see cref="MessagesContent"/> is set).</summary>
+    [Parameter] public IReadOnlyList<Message> Messages { get; set; } = Array.Empty<Message>();
+
+    /// <summary>Contacts to render (ignored when <see cref="ContactsContent"/> is set).</summary>
+    [Parameter] public IReadOnlyList<Contact> Contacts { get; set; } = Array.Empty<Contact>();
+
+    /// <summary>Override the messages list with custom markup.</summary>
+    [Parameter] public RenderFragment? MessagesContent { get; set; }
+
+    /// <summary>Override the contacts list with custom markup.</summary>
+    [Parameter] public RenderFragment? ContactsContent { get; set; }
+
+    /// <summary>Optional card footer (e.g. a message input).</summary>
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    private bool _contactsOpen;
+}

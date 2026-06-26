@@ -46,9 +46,9 @@ The same AdminLTE 4 dashboard, in the framework you know best — you're looking
 
 - **Two rendering models from one NuGet package:**
   - **Blazor components** (Server & WebAssembly, interactive render modes) — `<DashboardLayout>`, `<Card>`, `<SmallBox>`, `<EditForm>`-friendly inputs, and more.
-  - **Tag Helpers** for MVC / Razor Pages — `<adminlte-sidebar>`, `<adminlte-card>`, `<adminlte-small-box>`, `<adminlte-styles>`, `<adminlte-scripts>`.
-- **All 11 layout components** — DashboardLayout, AuthLayout, AppContent, Topbar, Sidebar, SidebarBrand, SidebarNav, SidebarNavItem, SidebarOverlay, Footer, ColorModeToggle.
-- **Priority widgets** — Card, SmallBox, InfoBox, Alert, Callout, Progress, Timeline, Breadcrumb, ProfileCard, DescriptionBlock.
+  - **Tag Helpers** for MVC / Razor Pages — `<adminlte-sidebar>`, `<adminlte-card>`, `<adminlte-small-box>`, `<adminlte-info-box>`, `<adminlte-alert>`, `<adminlte-callout>`, `<adminlte-progress>`, `<adminlte-timeline>`, `<adminlte-breadcrumb>`, `<adminlte-profile-card>`, `<adminlte-description-block>`, `<adminlte-styles>`, `<adminlte-scripts>`.
+- **All 11 layout components** — DashboardLayout, AuthLayout, AppContent, Topbar, Sidebar, SidebarBrand, SidebarNav, SidebarNavItem, SidebarOverlay, Footer, ColorModeToggle, plus the topbar dropdowns NavMessages, NavNotifications and NavTasks.
+- **Widgets** — Card, SmallBox, InfoBox, Alert, Callout, Progress, ProgressGroup, Ratings, Timeline, Breadcrumb, ProfileCard, DescriptionBlock, DirectChat, Tabs/Tab and Accordion/AccordionItem.
 - **Priority form components** — Button, Input, Select, Textarea, InputSwitch (all support `@bind-Value` inside `EditForm`).
 - **Config-driven sidebar menu** — a strongly-typed `MenuItem` model bound from `appsettings.json` via the Options pattern (text, route/href, icon, badge, submenu, **authorization policy / role**), with automatic active-item highlighting.
 - **Light / dark / auto color mode** — persisted to `localStorage`, with a server-respecting blocking script so there's **no flash of the wrong theme** on first paint.
@@ -183,10 +183,10 @@ A full MVC layout + view sample lives in [`docs/mvc-usage/`](docs/mvc-usage/).
 
 | Category | Components |
 |----------|------------|
-| **Layout (Blazor)** | `DashboardLayout`, `AuthLayout`, `AppContent`, `Topbar`, `Sidebar`, `SidebarBrand`, `SidebarNav`, `SidebarNavItem`, `SidebarOverlay`, `Footer`, `ColorModeToggle`, `CommandPalette` |
-| **Widgets (Blazor)** | `Card`, `SmallBox`, `InfoBox`, `Alert`, `Callout`, `Progress`, `Timeline`, `Breadcrumb`, `ProfileCard`, `DescriptionBlock` |
+| **Layout (Blazor)** | `DashboardLayout`, `AuthLayout`, `AppContent`, `Topbar`, `Sidebar`, `SidebarBrand`, `SidebarNav`, `SidebarNavItem`, `SidebarOverlay`, `Footer`, `ColorModeToggle`, `CommandPalette`, `NavMessages`, `NavNotifications`, `NavTasks` |
+| **Widgets (Blazor)** | `Card`, `SmallBox`, `InfoBox`, `Alert`, `Callout`, `Progress`, `ProgressGroup`, `Ratings`, `Timeline`, `Breadcrumb`, `ProfileCard`, `DescriptionBlock`, `DirectChat`, `Tabs`/`Tab`, `Accordion`/`AccordionItem` |
 | **Forms (Blazor)** | `Button`, `Input`, `Select`, `Textarea`, `InputSwitch` |
-| **Tag Helpers (MVC)** | `<adminlte-styles>`, `<adminlte-scripts>`, `<adminlte-sidebar>`, `<adminlte-color-mode-toggle>`, `<adminlte-card>`, `<adminlte-small-box>` |
+| **Tag Helpers (MVC)** | `<adminlte-styles>`, `<adminlte-scripts>`, `<adminlte-sidebar>`, `<adminlte-color-mode-toggle>`, `<adminlte-card>`, `<adminlte-small-box>`, `<adminlte-info-box>`, `<adminlte-alert>`, `<adminlte-callout>`, `<adminlte-progress>`, `<adminlte-timeline>`, `<adminlte-breadcrumb>`, `<adminlte-profile-card>`, `<adminlte-description-block>` |
 
 ## Demo
 
