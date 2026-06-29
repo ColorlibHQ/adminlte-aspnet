@@ -1,0 +1,177 @@
+@page "/projects"
+
+<PageTitle>Projects · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Projects" Breadcrumbs="_breadcrumbs">
+    <!-- Summary cards -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-3 col-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-secondary small mb-1">Active projects</p>
+                    <h3 class="mb-0 fw-bold">6</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-secondary small mb-1">On track</p>
+                    <h3 class="mb-0 fw-bold text-success">3</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-secondary small mb-1">At risk / delayed</p>
+                    <h3 class="mb-0 fw-bold text-warning">2</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-secondary small mb-1">Completed</p>
+                    <h3 class="mb-0 fw-bold text-secondary">1</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="card">
+        <div class="card-header d-flex flex-wrap gap-2 align-items-center">
+            <h3 class="card-title mb-0 me-auto">All projects</h3>
+            <div class="input-group input-group-sm" style="width: 16rem">
+                <span class="input-group-text">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                </span>
+                <input type="search" class="form-control" placeholder="Search projects…"
+                       aria-label="Search projects" />
+            </div>
+            <select class="form-select form-select-sm" style="width: 10rem" aria-label="Filter by status">
+                <option value="">All statuses</option>
+                <option>On track</option>
+                <option>At risk</option>
+                <option>Delayed</option>
+                <option>Completed</option>
+            </select>
+            <button class="btn btn-primary btn-sm" type="button">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
+                New project
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Team</th>
+                            <th>Budget</th>
+                            <th>Due</th>
+                            <th>Priority</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in _projects)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="#" class="fw-semibold text-decoration-none">@p.Name</a>
+                                    <div class="small text-secondary">@p.Client</div>
+                                </td>
+                                <td><span class="badge text-bg-@p.StatusTheme">@p.Status</span></td>
+                                <td style="min-width: 8rem">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px">
+                                            <div class="progress-bar bg-@p.ProgressTheme" role="progressbar"
+                                                 style="width:@(p.Progress)%" aria-valuenow="@p.Progress"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-secondary" style="min-width: 2.25rem">@(p.Progress)%</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-inline-flex">
+                                        @for (var i = 0; i < p.Team.Count; i++)
+                                        {
+                                            var m = p.Team[i];
+                                            <span class="rounded-circle d-inline-flex align-items-center justify-content-center bg-@(m.Theme)-subtle text-@m.Theme fw-semibold"
+                                                  style="width:1.75rem;height:1.75rem;font-size:0.7rem;border:2px solid var(--bs-body-bg);margin-left:@(i == 0 ? "0" : "-0.5rem")"
+                                                  title="@m.Initials">@m.Initials</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="text-nowrap">@p.Budget</td>
+                                <td class="text-nowrap">@p.Due</td>
+                                <td><span class="badge text-bg-@p.PriorityTheme">@p.Priority</span></td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-secondary" type="button" title="View">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary" type="button" title="Edit">
+                                            <i class="bi bi-pencil" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary" type="button" title="More">
+                                            <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-secondary">Showing 6 of 6</small>
+            <nav aria-label="Pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Pages"), new("Projects")];
+
+    private sealed record Member(string Initials, string Theme);
+
+    private sealed record Project(
+        string Name, string Client, string Status, string StatusTheme,
+        int Progress, string ProgressTheme, IReadOnlyList<Member> Team,
+        string Budget, string Due, string Priority, string PriorityTheme);
+
+    private readonly IReadOnlyList<Project> _projects =
+    [
+        new("AdminLTE 4 Release", "Internal", "On track", "success", 78, "primary",
+            [new("JD", "primary"), new("OB", "info"), new("DM", "success")],
+            "$24,500", "Jun 14, 2026", "High", "danger"),
+        new("Marketing Site Redesign", "Acme Corp", "At risk", "warning", 42, "info",
+            [new("OB", "info"), new("MR", "warning")],
+            "$48,000", "Jul 02, 2026", "High", "danger"),
+        new("Mobile App v2", "Nimbus Labs", "On track", "success", 61, "primary",
+            [new("LC", "primary"), new("ED", "danger"), new("AF", "secondary"), new("SK", "info")],
+            "$92,500", "Aug 18, 2026", "Medium", "info"),
+        new("Analytics Pipeline", "Internal", "Delayed", "danger", 22, "warning",
+            [new("DM", "success")],
+            "$12,000", "May 30, 2026", "Medium", "info"),
+        new("Brand Style Guide", "Riverhaus", "Completed", "secondary", 100, "success",
+            [new("OB", "info"), new("ED", "danger")],
+            "$8,200", "May 09, 2026", "Low", "secondary"),
+        new("Onboarding Email Flow", "Acme Corp", "On track", "success", 55, "info",
+            [new("MR", "warning"), new("JD", "primary")],
+            "$6,800", "Jun 22, 2026", "Low", "secondary"),
+    ];
+}
