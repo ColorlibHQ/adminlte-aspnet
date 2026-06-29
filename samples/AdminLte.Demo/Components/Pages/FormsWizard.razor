@@ -1,0 +1,267 @@
+@page "/forms/wizard"
+@* Forms Wizard — a native multi-step wizard driven by a @code int _step state
+   machine. Step indicators, per-step fields, a review step and
+   Previous/Next/Submit navigation. No JS plugin. *@
+
+<PageTitle>Form Wizard · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Form Wizard" Breadcrumbs="_breadcrumbs">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <Card BodyClass="p-4">
+                @* Step indicators *@
+                <ol class="wizard-steps mb-4">
+                    @for (var i = 0; i < _steps.Length; i++)
+                    {
+                        var cls = i == _step ? "active" : i < _step ? "completed" : null;
+                        <li class="@cls">@_steps[i]</li>
+                    }
+                </ol>
+
+                @if (_completed)
+                {
+                    <Alert Theme="success" Icon="bi-check-circle-fill" Title="All set!">
+                        Your account has been created (demo). Thanks, @_model.FirstName!
+                    </Alert>
+                    <Button Theme="secondary" Outline="true" Icon="bi-arrow-counterclockwise"
+                            Label="Start over" OnClick="Restart" />
+                }
+                else
+                {
+                    @* Step 1 — Account *@
+                    @if (_step == 0)
+                    {
+                        <h2 class="h5 mb-3">Create your account</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <Input Label="Email" Type="email" @bind-Value="_model.Email"
+                                       Error="@(_showErrors && string.IsNullOrWhiteSpace(_model.Email) ? "Please enter a valid email." : null)" />
+                            </div>
+                            <div class="col-md-6">
+                                <Input Label="Username" @bind-Value="_model.Username"
+                                       Error="@(_showErrors && (_model.Username?.Length ?? 0) < 3 ? "Username must be at least 3 characters." : null)" />
+                            </div>
+                            <div class="col-md-6">
+                                <Input Label="Password" Type="password" @bind-Value="_model.Password"
+                                       Error="@(_showErrors && (_model.Password?.Length ?? 0) < 8 ? "Password must be at least 8 characters." : null)" />
+                            </div>
+                            <div class="col-md-6">
+                                <Input Label="Confirm password" Type="password" @bind-Value="_model.ConfirmPassword"
+                                       Error="@(_showErrors && _model.Password != _model.ConfirmPassword ? "Passwords must match." : null)" />
+                            </div>
+                        </div>
+                    }
+
+                    @* Step 2 — Profile *@
+                    @if (_step == 1)
+                    {
+                        <h2 class="h5 mb-3">Tell us about yourself</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <Input Label="First name" @bind-Value="_model.FirstName"
+                                       Error="@(_showErrors && string.IsNullOrWhiteSpace(_model.FirstName) ? "First name is required." : null)" />
+                            </div>
+                            <div class="col-md-6">
+                                <Input Label="Last name" @bind-Value="_model.LastName"
+                                       Error="@(_showErrors && string.IsNullOrWhiteSpace(_model.LastName) ? "Last name is required." : null)" />
+                            </div>
+                            <div class="col-md-6">
+                                <Input Label="Company" @bind-Value="_model.Company" />
+                            </div>
+                            <div class="col-md-6">
+                                <Select Label="Role" @bind-Value="_model.Role" Options="_roles"
+                                        Error="@(_showErrors && string.IsNullOrEmpty(_model.Role) ? "Please select a role." : null)" />
+                            </div>
+                        </div>
+                    }
+
+                    @* Step 3 — Preferences *@
+                    @if (_step == 2)
+                    {
+                        <h2 class="h5 mb-3">Notification preferences</h2>
+                        <InputSwitch Label="Product updates & releases" @bind-Value="_model.NotifyProduct" GroupClass="mb-2" />
+                        <InputSwitch Label="Security alerts" @bind-Value="_model.NotifySecurity" GroupClass="mb-2" />
+                        <InputSwitch Label="Marketing & tips" @bind-Value="_model.NotifyMarketing" GroupClass="mb-3" />
+                        <Select Label="Digest frequency" @bind-Value="_model.Frequency" Options="_frequencies" />
+                    }
+
+                    @* Step 4 — Review *@
+                    @if (_step == 3)
+                    {
+                        <h2 class="h5 mb-3">Review &amp; confirm</h2>
+                        <dl class="row mb-3">
+                            <dt class="col-sm-4">Email</dt>
+                            <dd class="col-sm-8">@_model.Email</dd>
+                            <dt class="col-sm-4">Username</dt>
+                            <dd class="col-sm-8">@_model.Username</dd>
+                            <dt class="col-sm-4">Name</dt>
+                            <dd class="col-sm-8">@($"{_model.FirstName} {_model.LastName}")</dd>
+                            <dt class="col-sm-4">Company</dt>
+                            <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(_model.Company) ? "—" : _model.Company)</dd>
+                            <dt class="col-sm-4">Role</dt>
+                            <dd class="col-sm-8">@(_roles.FirstOrDefault(r => r.Value == _model.Role)?.Label ?? "—")</dd>
+                            <dt class="col-sm-4">Notifications</dt>
+                            <dd class="col-sm-8">@NotificationSummary</dd>
+                            <dt class="col-sm-4">Digest frequency</dt>
+                            <dd class="col-sm-8">@(_frequencies.FirstOrDefault(f => f.Value == _model.Frequency)?.Label ?? "—")</dd>
+                        </dl>
+                        <div class="form-check">
+                            <input class="form-check-input @(_showErrors && !_model.AcceptTerms ? "is-invalid" : null)"
+                                   type="checkbox" id="wz-terms" checked="@_model.AcceptTerms"
+                                   @onchange="e => _model.AcceptTerms = (bool)(e.Value ?? false)" />
+                            <label class="form-check-label" for="wz-terms">
+                                I agree to the <a href="#">terms of service</a>.
+                            </label>
+                            @if (_showErrors && !_model.AcceptTerms)
+                            {
+                                <div class="invalid-feedback d-block">You must accept the terms to continue.</div>
+                            }
+                        </div>
+                    }
+
+                    @* Navigation *@
+                    <div class="d-flex justify-content-between mt-4">
+                        <Button Theme="secondary" Outline="true" Icon="bi-arrow-left" Label="Previous"
+                                Disabled="@(_step == 0)" OnClick="Previous" />
+                        @if (_step < _steps.Length - 1)
+                        {
+                            <Button Theme="primary" OnClick="Next">
+                                Next <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                            </Button>
+                        }
+                        else
+                        {
+                            <Button Theme="success" Icon="bi-check-lg" Label="Submit" OnClick="Submit" />
+                        }
+                    </div>
+                }
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Forms"), new("Wizard")];
+
+    private readonly string[] _steps = ["Account", "Profile", "Preferences", "Review"];
+
+    private readonly IReadOnlyList<Select.Option> _roles =
+    [
+        new("", "Choose…"),
+        new("founder", "Founder / CEO"),
+        new("engineering", "Engineering"),
+        new("design", "Design"),
+        new("marketing", "Marketing"),
+        new("other", "Other"),
+    ];
+
+    private readonly IReadOnlyList<Select.Option> _frequencies =
+    [
+        new("realtime", "Real time"),
+        new("daily", "Daily"),
+        new("weekly", "Weekly"),
+        new("never", "Never"),
+    ];
+
+    private int _step;
+    private bool _showErrors;
+    private bool _completed;
+    private readonly WizardModel _model = new();
+
+    private string NotificationSummary
+    {
+        get
+        {
+            var on = new List<string>();
+            if (_model.NotifyProduct) on.Add("Product");
+            if (_model.NotifySecurity) on.Add("Security");
+            if (_model.NotifyMarketing) on.Add("Marketing");
+            return on.Count == 0 ? "None" : string.Join(", ", on);
+        }
+    }
+
+    private void Next()
+    {
+        if (!ValidateStep())
+        {
+            _showErrors = true;
+            return;
+        }
+
+        _showErrors = false;
+        if (_step < _steps.Length - 1)
+        {
+            _step++;
+        }
+    }
+
+    private void Previous()
+    {
+        _showErrors = false;
+        if (_step > 0)
+        {
+            _step--;
+        }
+    }
+
+    private void Submit()
+    {
+        if (!ValidateStep())
+        {
+            _showErrors = true;
+            return;
+        }
+
+        _completed = true;
+    }
+
+    private void Restart()
+    {
+        _step = 0;
+        _showErrors = false;
+        _completed = false;
+        _model.Reset();
+    }
+
+    private bool ValidateStep() => _step switch
+    {
+        0 => !string.IsNullOrWhiteSpace(_model.Email)
+             && (_model.Username?.Length ?? 0) >= 3
+             && (_model.Password?.Length ?? 0) >= 8
+             && _model.Password == _model.ConfirmPassword,
+        1 => !string.IsNullOrWhiteSpace(_model.FirstName)
+             && !string.IsNullOrWhiteSpace(_model.LastName)
+             && !string.IsNullOrEmpty(_model.Role),
+        3 => _model.AcceptTerms,
+        _ => true,
+    };
+
+    private sealed class WizardModel
+    {
+        public string? Email { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Company { get; set; }
+        public string Role { get; set; } = "";
+        public bool NotifyProduct { get; set; } = true;
+        public bool NotifySecurity { get; set; } = true;
+        public bool NotifyMarketing { get; set; }
+        public string Frequency { get; set; } = "daily";
+        public bool AcceptTerms { get; set; }
+
+        public void Reset()
+        {
+            Email = Username = Password = ConfirmPassword = null;
+            FirstName = LastName = Company = null;
+            Role = "";
+            NotifyProduct = NotifySecurity = true;
+            NotifyMarketing = false;
+            Frequency = "daily";
+            AcceptTerms = false;
+        }
+    }
+}

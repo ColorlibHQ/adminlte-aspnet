@@ -1,0 +1,86 @@
+@* Shared mailbox left column (Compose button + Folders + Labels).
+   Local to the demo Pages folder — not part of the component library. *@
+
+<a href="/mailbox/compose" class="btn btn-primary w-100 mb-3">
+    <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>
+    Compose
+</a>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Folders</h3>
+    </div>
+    <div class="card-body p-0">
+        <ul class="nav nav-pills flex-column mb-0">
+            <li class="nav-item">
+                <a href="/mailbox/inbox"
+                   class="nav-link rounded-0 d-flex justify-content-between @(Active == "inbox" ? "active" : null)">
+                    <span><i class="bi bi-inbox me-2" aria-hidden="true"></i>Inbox</span>
+                    <span class="badge text-bg-primary">3</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0">
+                    <i class="bi bi-send me-2" aria-hidden="true"></i>Sent
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0 d-flex justify-content-between">
+                    <span><i class="bi bi-file-earmark me-2" aria-hidden="true"></i>Drafts</span>
+                    <span class="badge text-bg-secondary">2</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0">
+                    <i class="bi bi-star me-2" aria-hidden="true"></i>Starred
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0">
+                    <i class="bi bi-archive me-2" aria-hidden="true"></i>Archive
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0">
+                    <i class="bi bi-exclamation-octagon me-2" aria-hidden="true"></i>Spam
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link rounded-0">
+                    <i class="bi bi-trash me-2" aria-hidden="true"></i>Trash
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">Labels</h3>
+    </div>
+    <div class="card-body p-0">
+        <ul class="nav flex-column mb-0">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="bi bi-circle-fill text-primary me-2" style="font-size: 0.6rem" aria-hidden="true"></i>
+                    Customers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="bi bi-circle-fill text-success me-2" style="font-size: 0.6rem" aria-hidden="true"></i>
+                    Billing
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="bi bi-circle-fill text-warning me-2" style="font-size: 0.6rem" aria-hidden="true"></i>
+                    Internal
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    /// <summary>Which folder is highlighted as active (e.g. <c>inbox</c>).</summary>
+    [Parameter] public string? Active { get; set; }
+}

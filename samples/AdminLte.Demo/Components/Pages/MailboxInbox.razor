@@ -1,0 +1,96 @@
+@page "/mailbox/inbox"
+@* Mailbox inbox — folder/label sidebar plus a message list. Markup-only;
+   the star toggles, checkboxes and search are static placeholders. *@
+
+<PageTitle>Mailbox · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Mailbox" Breadcrumbs="_breadcrumbs">
+    <div class="row g-3">
+        <div class="col-lg-3">
+            <MailboxSidebar Active="inbox" />
+        </div>
+
+        <div class="col-lg-9">
+            <Card Title="Inbox" BodyClass="p-0">
+                <Tools>
+                    <div class="input-group input-group-sm" style="width: 16rem">
+                        <span class="input-group-text">
+                            <i class="bi bi-search" aria-hidden="true"></i>
+                        </span>
+                        <input type="search" class="form-control" placeholder="Search mail…" aria-label="Search mail" />
+                    </div>
+                </Tools>
+                <ChildContent>
+                    <div class="d-flex align-items-center px-3 py-2 border-bottom">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="checkbox" id="select-all" />
+                            <label class="form-check-label visually-hidden" for="select-all">Select all</label>
+                        </div>
+                        <div class="btn-group btn-group-sm ms-3">
+                            <button class="btn btn-outline-secondary" type="button" title="Refresh">
+                                <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" title="Archive">
+                                <i class="bi bi-archive" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" title="Mark as spam">
+                                <i class="bi bi-exclamation-octagon" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" title="Delete">
+                                <i class="bi bi-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <span class="ms-auto text-secondary small">1&ndash;@_messages.Count of @_messages.Count</span>
+                    </div>
+                    <ul class="list-group list-group-flush mb-0">
+                        @for (var i = 0; i < _messages.Count; i++)
+                        {
+                            var msg = _messages[i];
+                            <li class="list-group-item d-flex align-items-center gap-2 @(msg.Unread ? "fw-semibold bg-body-secondary" : null)">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" id="msg-@i" />
+                                    <label class="form-check-label visually-hidden" for="msg-@i">Select message from @msg.From</label>
+                                </div>
+                                <button class="btn btn-link p-0 text-warning lh-1" type="button"
+                                        title="@(msg.Starred ? "Starred" : "Star")" aria-label="@(msg.Starred ? "Starred" : "Star")">
+                                    <i class="bi @(msg.Starred ? "bi-star-fill" : "bi-star")" aria-hidden="true"></i>
+                                </button>
+                                <a href="/mailbox/read"
+                                   class="flex-grow-1 d-flex flex-column flex-md-row gap-md-3 text-decoration-none text-body"
+                                   style="min-width: 0">
+                                    <span class="text-truncate" style="min-width: 9rem">@msg.From</span>
+                                    <span class="flex-grow-1 text-truncate" style="min-width: 0">
+                                        <span class="badge text-bg-@msg.LabelTheme me-2">&middot;</span>
+                                        @msg.Subject
+                                        <span class="fw-normal text-secondary">&nbsp;&mdash; @msg.Preview</span>
+                                    </span>
+                                    <span class="text-secondary small text-md-end" style="min-width: 5rem">@msg.Time</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </ChildContent>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Mailbox"), new("Inbox")];
+
+    private sealed record Mail(string From, string Subject, string Preview, string Time,
+        string LabelTheme, bool Starred, bool Unread);
+
+    private readonly IReadOnlyList<Mail> _messages =
+    [
+        new("Olivia Bennett", "Re: design system v2.4 sign-off", "Approved — a few small notes on the success state for forms.", "10:42 AM", "primary", true, true),
+        new("GitHub", "[fullcalendar/fullcalendar] PR #6912 merged", "Allow custom render hooks for time grid axis labels.", "9:08 AM", "secondary", false, true),
+        new("Stripe", "Your May invoice is ready", "Invoice INV-2026-00428 totaling $108.31 has been issued.", "8:15 AM", "success", false, true),
+        new("Marcus Reyes", "Lunch on Thursday?", "Free around 1pm at the usual place. Let me know.", "Yesterday", "info", true, false),
+        new("Linear", "[ADM-441] Calendar drag-and-drop not working on Safari iOS", "Reproduces consistently on iOS 18.4 in Safari and Chrome.", "Yesterday", "warning", false, false),
+        new("Vercel", "Deployment succeeded — production", "main@a3c91fb deployed to production in 47s.", "May 16", "success", false, false),
+        new("Sara Khan", "Customer interview notes — Acme Corp", "Three big themes: onboarding friction, billing visibility, mobile.", "May 15", "primary", false, false),
+        new("AWS", "Your monthly bill summary", "Total charges for April 2026: $312.94. View in console.", "May 14", "danger", false, false),
+    ];
+}

@@ -1,0 +1,139 @@
+@page "/chat"
+@* Chat — contacts list plus a conversation pane. The composer appends to a
+   @code message list (pure Blazor state, no JS). *@
+
+<PageTitle>Chat · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Chat" Breadcrumbs="_breadcrumbs">
+    <div class="chat-app">
+        <!-- Contacts -->
+        <aside class="chat-contacts">
+            <div class="p-3 border-bottom">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-body">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                    </span>
+                    <input type="search" class="form-control" placeholder="Search contacts…" aria-label="Search contacts" />
+                </div>
+            </div>
+            <div class="flex-grow-1 overflow-auto">
+                @foreach (var c in _contacts)
+                {
+                    <a href="#" class="chat-contact @(c.Active ? "active" : null)">
+                        <span class="chat-avatar bg-@(c.Theme)-subtle text-@c.Theme @(c.Online ? "online" : null)">@c.Initials</span>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0 text-truncate @(c.Unread > 0 ? "fw-semibold" : null)">@c.Name</p>
+                                <small class="text-secondary flex-shrink-0 ms-2">@c.Time</small>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-truncate @(c.Unread > 0 ? "fw-semibold" : "text-secondary")">@c.Preview</small>
+                                @if (c.Unread > 0)
+                                {
+                                    <span class="badge text-bg-primary rounded-pill ms-2">@c.Unread</span>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </aside>
+
+        <!-- Conversation -->
+        <section class="chat-conversation">
+            <header class="chat-header">
+                <span class="chat-avatar bg-primary-subtle text-primary online">OB</span>
+                <div class="flex-grow-1">
+                    <p class="mb-0 fw-semibold">Olivia Bennett</p>
+                    <small class="text-success">
+                        <i class="bi bi-circle-fill" style="font-size: 0.5rem" aria-hidden="true"></i>
+                        Online &middot; typing&hellip;
+                    </small>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary" type="button" title="Call">
+                        <i class="bi bi-telephone" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button" title="Video call">
+                        <i class="bi bi-camera-video" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button" title="More">
+                        <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="chat-messages">
+                @foreach (var m in _messages)
+                {
+                    <div class="chat-message @(m.Mine ? "me" : "them")">
+                        <div class="chat-bubble">
+                            @m.Text
+                            <span class="chat-time">@m.Time</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <EditForm class="chat-composer" Model="this" OnValidSubmit="Send">
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary" type="button" title="Attach">
+                        <i class="bi bi-paperclip" aria-hidden="true"></i>
+                    </button>
+                    <input type="text" class="form-control" placeholder="Type a message…" aria-label="Type a message"
+                           value="@_draft" @oninput="e => _draft = e.Value?.ToString()" />
+                    <button class="btn btn-outline-secondary" type="button" title="Emoji">
+                        <i class="bi bi-emoji-smile" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-send" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </EditForm>
+        </section>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Chat")];
+
+    private sealed record Contact(string Name, string Initials, string Theme, string Preview,
+        string Time, int Unread, bool Online, bool Active);
+
+    private readonly IReadOnlyList<Contact> _contacts =
+    [
+        new("Olivia Bennett", "OB", "primary", "Approved — a few small notes…", "2m", 2, true, true),
+        new("Marcus Reyes", "MR", "success", "Lunch Thursday?", "1h", 0, true, false),
+        new("Sara Khan", "SK", "info", "Customer interview notes are up.", "3h", 0, false, false),
+        new("Diego Smania", "DS", "warning", "PR is ready for review.", "Yesterday", 1, false, false),
+        new("Emma Dawson", "ED", "danger", "Heading out, see you Mon.", "Yesterday", 0, false, false),
+        new("Liam Carter", "LC", "primary", "Pushed the calendar fix.", "May 16", 0, true, false),
+        new("Ava Foster", "AF", "secondary", "Adding you to the design crit.", "May 15", 0, false, false),
+    ];
+
+    private sealed record ChatMessage(string Text, string Time, bool Mine);
+
+    private readonly List<ChatMessage> _messages =
+    [
+        new("Hey Jane! Did you get a chance to look at the v2.4 candidate?", "10:38 AM", false),
+        new("Just finished going through it. Overall really solid — the new motion primitives are great.", "10:40 AM", true),
+        new("Glad you like them. Any concerns?", "10:40 AM", false),
+        new("Two small things: the success state on form inputs feels light, and the focus ring is barely visible on dark theme.", "10:41 AM", true),
+        new("Yeah, that focus ring issue has been bugging me too. I'll bump the contrast and ping you for another look.", "10:42 AM", false),
+        new("Sounds good. Otherwise, ship it!", "10:42 AM", true),
+    ];
+
+    private string? _draft;
+
+    private void Send()
+    {
+        if (string.IsNullOrWhiteSpace(_draft))
+        {
+            return;
+        }
+
+        _messages.Add(new ChatMessage(_draft.Trim(), DateTime.Now.ToString("h:mm tt"), true));
+        _draft = null;
+    }
+}

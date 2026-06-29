@@ -1,0 +1,91 @@
+@page "/mailbox/compose"
+@* Mailbox compose — a new-message form. State is bound but the action buttons
+   are demo placeholders (no actual send). *@
+
+<PageTitle>Compose · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Compose Message" Breadcrumbs="_breadcrumbs">
+    <div class="row g-3">
+        <div class="col-lg-3">
+            <MailboxSidebar />
+        </div>
+
+        <div class="col-lg-9">
+            <Card Title="New Message">
+                <ChildContent>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="mail-to">To</label>
+                            <input type="email" class="form-control" id="mail-to"
+                                   placeholder="recipient@example.com" value="@_to"
+                                   @oninput="e => _to = e.Value?.ToString()" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mail-cc">Cc</label>
+                            <input type="text" class="form-control" id="mail-cc" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mail-bcc">Bcc</label>
+                            <input type="text" class="form-control" id="mail-bcc" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="mail-subject">Subject</label>
+                            <input type="text" class="form-control" id="mail-subject" value="@_subject"
+                                   @oninput="e => _subject = e.Value?.ToString()" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="mail-body">Message</label>
+                            <textarea id="mail-body" class="form-control" rows="12"
+                                      placeholder="Write your message…" style="min-height: 16rem"
+                                      value="@_body" @oninput="e => _body = e.Value?.ToString()"></textarea>
+                            <small class="text-secondary">
+                                Hook up a rich-text editor such as
+                                <a href="https://quilljs.com/" target="_blank" rel="noopener">Quill</a>
+                                or
+                                <a href="https://github.com/Ionaru/easy-markdown-editor" target="_blank" rel="noopener">EasyMDE</a>
+                                to upgrade this textarea.
+                            </small>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="mail-attach">Attachments</label>
+                            <input type="file" class="form-control" id="mail-attach" multiple />
+                        </div>
+                    </div>
+                    @if (_sent)
+                    {
+                        <div class="mt-3">
+                            <Alert Theme="success" Icon="bi-check-circle-fill">Message sent (demo).</Alert>
+                        </div>
+                    }
+                </ChildContent>
+                <FooterContent>
+                    <div class="d-flex gap-2">
+                        <Button Theme="primary" Icon="bi-send" Label="Send" OnClick="Send" />
+                        <Button Theme="secondary" Outline="true" Icon="bi-file-earmark" Label="Save draft" />
+                        <button class="btn btn-outline-danger ms-auto" type="button" @onclick="Discard">
+                            <i class="bi bi-x-lg me-1" aria-hidden="true"></i>Discard
+                        </button>
+                    </div>
+                </FooterContent>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Mailbox", "/mailbox/inbox"), new("Compose")];
+
+    private string? _to;
+    private string? _subject;
+    private string? _body;
+    private bool _sent;
+
+    private void Send() => _sent = true;
+
+    private void Discard()
+    {
+        _to = _subject = _body = null;
+        _sent = false;
+    }
+}
