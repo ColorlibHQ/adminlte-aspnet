@@ -8,7 +8,9 @@
 Official [AdminLTE 4](https://adminlte.io) integration for ASP.NET Core — **Blazor components** *and* **Tag Helpers** for MVC / Razor Pages, built on Bootstrap 5.3 with vanilla JS (no jQuery). The compiled AdminLTE, Bootstrap and Bootstrap Icons assets ship inside the package as static web assets, so consumers just `dotnet add package` and reference them.
 
 <p align="center">
-  <a href="https://adminlte.io/themes/v4/"><strong>🔗 AdminLTE demo →</strong></a>
+  <a href="https://aspnet.adminlte.io"><strong>🔗 Live demo →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://docs.adminlte.io/aspnet/introduction"><strong>📚 Documentation →</strong></a>
   &nbsp;·&nbsp;
   <a href="#installation"><strong>Get started →</strong></a>
 </p>
