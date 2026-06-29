@@ -1,0 +1,225 @@
+@page "/ui/general"
+@* General UI elements — buttons, badges, alerts, callouts, pagination, list groups,
+   blockquotes. The Card component drives the outline headers; the inner Bootstrap 5.3
+   markup is copied from dist/ui/general.html for a 1:1 match. *@
+
+<PageTitle>General UI · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="General UI" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Buttons" Theme="danger" Variant="outline">
+                <button type="button" class="btn btn-primary mb-2">Primary</button>
+                <button type="button" class="btn btn-secondary mb-2">Secondary</button>
+                <button type="button" class="btn btn-success mb-2">Success</button>
+                <button type="button" class="btn btn-danger mb-2">Danger</button>
+                <button type="button" class="btn btn-warning mb-2">Warning</button>
+                <button type="button" class="btn btn-info mb-2">Info</button>
+                <button type="button" class="btn btn-light mb-2">Light</button>
+                <button type="button" class="btn btn-dark mb-2">Dark</button>
+                <button type="button" class="btn btn-link mb-2">Link</button>
+                <hr />
+                <button type="button" class="btn btn-outline-primary mb-2">Primary</button>
+                <button type="button" class="btn btn-outline-secondary mb-2">Secondary</button>
+                <button type="button" class="btn btn-outline-success mb-2">Success</button>
+                <button type="button" class="btn btn-outline-danger mb-2">Danger</button>
+                <button type="button" class="btn btn-outline-warning mb-2">Warning</button>
+                <button type="button" class="btn btn-outline-info mb-2">Info</button>
+                <button type="button" class="btn btn-outline-light mb-2">Light</button>
+                <button type="button" class="btn btn-outline-dark mb-2">Dark</button>
+                <hr />
+                <button type="button" class="btn btn-primary btn-lg">Large button</button>
+                <button type="button" class="btn btn-warning btn-sm">Small button</button>
+                <hr />
+                <button type="button" class="btn btn-primary mb-2" disabled>Primary (disabled)</button>
+                <button type="button" class="btn btn-success mb-2" disabled>Success (disabled)</button>
+                <button type="button" class="btn btn-danger mb-2" disabled>Danger (disabled)</button>
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="Button Group" Theme="info" Variant="outline">
+                <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary">Left</button>
+                    <button type="button" class="btn btn-primary">Middle</button>
+                    <button type="button" class="btn btn-primary">Right</button>
+                </div>
+                <br />
+                <div class="btn-group mb-3" role="group" aria-label="Outline example">
+                    <button type="button" class="btn btn-outline-secondary">Left</button>
+                    <button type="button" class="btn btn-outline-secondary">Middle</button>
+                    <button type="button" class="btn btn-outline-secondary">Right</button>
+                </div>
+                <br />
+                <div class="btn-group-vertical" role="group" aria-label="Vertical example">
+                    <button type="button" class="btn btn-success">Top</button>
+                    <button type="button" class="btn btn-success">Middle</button>
+                    <button type="button" class="btn btn-success">Bottom</button>
+                </div>
+            </Card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Alerts" Theme="success" Variant="outline">
+                <div class="alert alert-primary" role="alert">
+                    A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    A simple secondary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-success" role="alert">
+                    A simple success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    A simple danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    A simple warning alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-info" role="alert">
+                    A simple info alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                </div>
+                <div class="alert alert-dismissible alert-warning" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <h5><i class="bi bi-exclamation-triangle me-2"></i>Heads up!</h5>
+                    A dismissible alert with a heading and an icon.
+                </div>
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="Callouts" Theme="warning" Variant="outline">
+                <Callout Theme="info" Title="Info Callout">
+                    This is an informational callout. It draws attention with a colored left border.
+                </Callout>
+                <Callout Theme="success" Title="Success Callout">
+                    Everything went according to plan.
+                </Callout>
+                <Callout Theme="warning" Title="Warning Callout">
+                    Better check yourself, you're not looking too good.
+                </Callout>
+                <Callout Theme="danger" Title="Danger Callout">
+                    Change a few things up and try submitting again.
+                </Callout>
+            </Card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Badges" Theme="primary" Variant="outline">
+                <h4>Example heading <span class="badge bg-secondary">New</span></h4>
+                <h5>Example heading <span class="badge bg-secondary">New</span></h5>
+                <hr />
+                <button type="button" class="btn btn-primary">
+                    Notifications <span class="badge text-bg-secondary">4</span>
+                </button>
+                <button type="button" class="btn btn-primary position-relative ms-2">
+                    Inbox
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        99+
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </button>
+                <hr />
+                <span class="badge text-bg-primary">Primary</span>
+                <span class="badge text-bg-secondary">Secondary</span>
+                <span class="badge text-bg-success">Success</span>
+                <span class="badge text-bg-danger">Danger</span>
+                <span class="badge text-bg-warning">Warning</span>
+                <span class="badge text-bg-info">Info</span>
+                <span class="badge text-bg-light">Light</span>
+                <span class="badge text-bg-dark">Dark</span>
+                <hr />
+                <span class="badge rounded-pill text-bg-primary">Primary</span>
+                <span class="badge rounded-pill text-bg-secondary">Secondary</span>
+                <span class="badge rounded-pill text-bg-success">Success</span>
+                <span class="badge rounded-pill text-bg-danger">Danger</span>
+                <span class="badge rounded-pill text-bg-warning">Warning</span>
+                <span class="badge rounded-pill text-bg-info">Info</span>
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="List Group" Theme="danger" Variant="outline">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        The current link item
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>
+                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+                    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a>
+                </div>
+            </Card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Pagination" Theme="success" Variant="outline">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+                <hr />
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <hr />
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                        <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </Card>
+        </div>
+        <div class="col-md-6">
+            <Card Title="Blockquotes" Theme="secondary" Variant="outline">
+                <figure>
+                    <blockquote class="blockquote">
+                        <p>A well-known quote, contained in a blockquote element.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Someone famous in <cite title="Source Title">Source Title</cite>
+                    </figcaption>
+                </figure>
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>A centered quote, aligned with utility classes.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Someone famous in <cite title="Source Title">Source Title</cite>
+                    </figcaption>
+                </figure>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("UI Elements"), new("General")];
+}

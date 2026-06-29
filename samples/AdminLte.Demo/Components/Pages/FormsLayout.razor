@@ -1,0 +1,159 @@
+@page "/forms/layout"
+@* Form layouts — horizontal, inline and grid arrangements. Mirrors
+   dist/forms/layout.html with plain Bootstrap 5.3 markup inside Cards. *@
+
+<PageTitle>Form Layout · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Form Layout" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Horizontal Form" Theme="warning" Variant="outline">
+                <form>
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="inputEmail3" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="inputPassword3" />
+                        </div>
+                    </div>
+                    <fieldset class="row mb-3">
+                        <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked />
+                                <label class="form-check-label" for="gridRadios1">First radio</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2" />
+                                <label class="form-check-label" for="gridRadios2">Second radio</label>
+                            </div>
+                            <div class="form-check disabled">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled />
+                                <label class="form-check-label" for="gridRadios3">Third disabled radio</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck1" />
+                                <label class="form-check-label" for="gridCheck1">Example checkbox</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Sign in</button>
+                    <button type="submit" class="btn float-end">Cancel</button>
+                </form>
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <Card Title="Inline Form" Theme="primary" Variant="outline">
+                <form class="row row-cols-lg-auto g-3 align-items-center">
+                    <div class="col-12">
+                        <label class="visually-hidden" for="inlineUser">Username</label>
+                        <div class="input-group">
+                            <div class="input-group-text">@@</div>
+                            <input type="text" class="form-control" id="inlineUser" placeholder="Username" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="visually-hidden" for="inlineSelect">Preference</label>
+                        <select class="form-select" id="inlineSelect">
+                            <option selected>Choose&hellip;</option>
+                            <option>One</option>
+                            <option>Two</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inlineCheck" />
+                            <label class="form-check-label" for="inlineCheck">Remember me</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <Card Title="Different Height" Theme="secondary" Variant="outline">
+                <input class="form-control form-control-lg mb-3" type="text" placeholder=".form-control-lg" aria-label=".form-control-lg example" />
+                <input class="form-control mb-3" type="text" placeholder="Default input" aria-label="default input example" />
+                <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example" />
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <Card Title="Different Width" Theme="danger" Variant="outline">
+                <div class="row g-2">
+                    <div class="col-3">
+                        <input type="text" class="form-control" placeholder=".col-3" />
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" placeholder=".col-4" />
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control" placeholder=".col-5" />
+                    </div>
+                </div>
+            </Card>
+        </div>
+
+        <div class="col-12">
+            <Card Title="Grid Form" Theme="info" Variant="outline">
+                <form class="row g-3">
+                    <div class="col-md-6">
+                        <label for="gridInputEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="gridInputEmail" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gridInputPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="gridInputPassword" />
+                    </div>
+                    <div class="col-12">
+                        <label for="gridInputAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="gridInputAddress" placeholder="1234 Main St" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gridInputCity" class="form-label">City</label>
+                        <input type="text" class="form-control" id="gridInputCity" />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gridInputState" class="form-label">State</label>
+                        <select id="gridInputState" class="form-select">
+                            <option selected>Choose&hellip;</option>
+                            <option>California</option>
+                            <option>Washington</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="gridInputZip" class="form-label">Zip</label>
+                        <input type="text" class="form-control" id="gridInputZip" />
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="gridFormCheck" />
+                            <label class="form-check-label" for="gridFormCheck">Check me out</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-info">Sign in</button>
+                    </div>
+                </form>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Forms"), new("Layout")];
+}
