@@ -1,0 +1,55 @@
+@page "/ui/icons"
+@* Icons page. Mirrors dist/ui/icons.html (font-library recommendations) and adds a
+   live Bootstrap Icons grid, since Bootstrap Icons ship with AdminLTE 4. *@
+
+<PageTitle>Icons · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Icons" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-12">
+            <Card Title="Icons" Theme="primary" Variant="outline">
+                <p>You can use any font library you like with AdminLTE 4. These pages ship with
+                    <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">Bootstrap Icons</a>.</p>
+                <strong>Recommendations</strong>
+                <ul class="mt-1">
+                    <li><a href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</a></li>
+                    <li><a href="https://useiconic.com/open/" target="_blank" rel="noopener">Iconic Icons</a></li>
+                    <li><a href="https://ionicons.com/" target="_blank" rel="noopener">Ion Icons</a></li>
+                </ul>
+            </Card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <Card Title="Bootstrap Icons" Theme="secondary" Variant="outline">
+                <div class="row text-center g-3">
+                    @foreach (var icon in _icons)
+                    {
+                        <div class="col-4 col-sm-3 col-md-2">
+                            <div class="border rounded p-3 h-100 d-flex flex-column align-items-center justify-content-center">
+                                <i class="bi @icon fs-2 mb-2" aria-hidden="true"></i>
+                                <span class="small text-secondary text-truncate w-100">@icon</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("UI Elements"), new("Icons")];
+
+    private readonly IReadOnlyList<string> _icons =
+    [
+        "bi-alarm", "bi-archive", "bi-bell", "bi-bookmark", "bi-calendar", "bi-camera",
+        "bi-cart", "bi-chat", "bi-clipboard", "bi-cloud", "bi-cup-hot", "bi-envelope",
+        "bi-eye", "bi-file-earmark", "bi-flag", "bi-folder", "bi-gear", "bi-geo-alt",
+        "bi-graph-up", "bi-heart", "bi-house", "bi-image", "bi-key", "bi-lightning",
+        "bi-list", "bi-lock", "bi-megaphone", "bi-pencil", "bi-people", "bi-pie-chart",
+        "bi-printer", "bi-search", "bi-shield-check", "bi-star", "bi-tag", "bi-trash",
+    ];
+}

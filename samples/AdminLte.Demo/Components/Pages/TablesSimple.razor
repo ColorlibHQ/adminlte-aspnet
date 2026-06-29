@@ -1,0 +1,159 @@
+@page "/tables/simple"
+@* Striped / bordered / hover tables inside AdminLTE cards. Mirrors dist/tables/simple.html. *@
+
+<PageTitle>Simple Tables · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Simple Tables" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-md-6">
+            <Card Title="Bordered Table"
+                  FooterClass="clearfix"
+                  FooterContent="_pagination">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _rows)
+                        {
+                            <tr class="align-middle">
+                                <td>@row.Index</td>
+                                <td>@row.Task</td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar text-bg-@row.Theme" style="width: @(row.Percent)%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="badge text-bg-@row.Theme">@(row.Percent)%</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Card>
+
+            <Card Title="Condensed Full Width Table" BodyClass="p-0">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _rows)
+                        {
+                            <tr class="align-middle">
+                                <td>@row.Index</td>
+                                <td>@row.Task</td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar text-bg-@row.Theme" style="width: @(row.Percent)%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="badge text-bg-@row.Theme">@(row.Percent)%</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Card>
+        </div>
+
+        <div class="col-md-6">
+            <Card Title="Simple Full Width Table" BodyClass="p-0">
+                <Tools>
+                    <ul class="pagination pagination-sm float-end">
+                        <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    </ul>
+                </Tools>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _rows)
+                        {
+                            <tr class="align-middle">
+                                <td>@row.Index</td>
+                                <td>@row.Task</td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar text-bg-@row.Theme" style="width: @(row.Percent)%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="badge text-bg-@row.Theme">@(row.Percent)%</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Card>
+
+            <Card Title="Striped Full Width Table" BodyClass="p-0">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _rows)
+                        {
+                            <tr class="align-middle">
+                                <td>@row.Index</td>
+                                <td>@row.Task</td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar text-bg-@row.Theme" style="width: @(row.Percent)%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="badge text-bg-@row.Theme">@(row.Percent)%</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Tables"), new("Simple")];
+
+    private readonly IReadOnlyList<Row> _rows =
+    [
+        new("1.", "Update software", 55, "danger"),
+        new("2.", "Clean database", 70, "warning"),
+        new("3.", "Cron job running", 30, "primary"),
+        new("4.", "Fix and squish bugs", 90, "success"),
+    ];
+
+    private readonly RenderFragment _pagination =
+        @<ul class="pagination pagination-sm m-0 float-end">
+            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+        </ul>;
+
+    private sealed record Row(string Index, string Task, int Percent, string Theme);
+}

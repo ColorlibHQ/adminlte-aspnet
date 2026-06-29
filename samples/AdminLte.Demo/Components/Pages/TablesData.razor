@@ -1,0 +1,119 @@
+@page "/tables/data"
+@* Feature-rich data table. Search box, sortable headers and pagination are rendered
+   as static Bootstrap markup. A JS datatable library (e.g. Tabulator, which the core
+   AdminLTE demo uses) could be wired up against this table later for live behaviour. *@
+
+<PageTitle>Data Tables · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Data Tables" Breadcrumbs="_breadcrumbs">
+    <Card Title="Users"
+          FooterClass="text-secondary small"
+          BodyClass="p-0">
+        <FooterContent>
+            A vanilla-JS datatable library could be wired against this table for live
+            search, sort, pagination and export — no jQuery required.
+        </FooterContent>
+        <Tools>
+            <div class="input-group input-group-sm" style="width: 16rem">
+                <span class="input-group-text">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                </span>
+                <input type="search" class="form-control" placeholder="Filter rows…" aria-label="Filter rows" />
+            </div>
+        </Tools>
+
+        <div class="d-flex gap-2 p-3 pb-0">
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>
+                Export CSV
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-filetype-json me-1" aria-hidden="true"></i>
+                Export JSON
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                Print
+            </button>
+        </div>
+
+        @* TODO: a vanilla-JS datatable library (Tabulator/Simple-DataTables) could be
+           initialised against this table to make search, sort and pagination live. *@
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 60px">
+                        <a href="#" class="text-decoration-none text-reset">
+                            # <i class="bi bi-arrow-down-up small ms-1" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="text-decoration-none text-reset">
+                            Name <i class="bi bi-arrow-down-up small ms-1" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="text-decoration-none text-reset">
+                            Email <i class="bi bi-arrow-down-up small ms-1" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th style="width: 120px">
+                        <a href="#" class="text-decoration-none text-reset">
+                            Role <i class="bi bi-arrow-down-up small ms-1" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th style="width: 130px" class="text-center">Status</th>
+                    <th style="width: 130px">
+                        <a href="#" class="text-decoration-none text-reset">
+                            Joined <i class="bi bi-arrow-down-up small ms-1" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in _users)
+                {
+                    <tr class="align-middle">
+                        <td>@user.Id</td>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td class="text-center">
+                            <span class="badge text-bg-@StatusTheme(user.Status)">@user.Status</span>
+                        </td>
+                        <td>@user.Joined</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Card>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+        [new("Home", "/"), new("Tables"), new("Data")];
+
+    private static string StatusTheme(string status) => status switch
+    {
+        "Active" => "success",
+        "Invited" => "info",
+        "Suspended" => "secondary",
+        _ => "secondary",
+    };
+
+    private readonly IReadOnlyList<User> _users =
+    [
+        new(1, "Olivia Bennett", "olivia@example.com", "Admin", "Active", "2024-03-12"),
+        new(2, "Liam Carter", "liam@example.com", "Editor", "Active", "2024-04-08"),
+        new(3, "Emma Dawson", "emma@example.com", "Viewer", "Invited", "2024-06-21"),
+        new(4, "Noah Evans", "noah@example.com", "Editor", "Suspended", "2024-07-15"),
+        new(5, "Ava Foster", "ava@example.com", "Admin", "Active", "2024-08-30"),
+        new(6, "Ethan Grant", "ethan@example.com", "Viewer", "Active", "2024-09-14"),
+        new(7, "Sophia Hayes", "sophia@example.com", "Editor", "Active", "2024-10-02"),
+        new(8, "Mason Ingram", "mason@example.com", "Viewer", "Invited", "2024-11-19"),
+        new(9, "Isabella Jones", "isabella@example.com", "Admin", "Active", "2025-01-05"),
+        new(10, "Lucas Klein", "lucas@example.com", "Viewer", "Suspended", "2025-02-18"),
+    ];
+
+    private sealed record User(int Id, string Name, string Email, string Role, string Status, string Joined);
+}
