@@ -1,0 +1,191 @@
+@page "/kanban"
+@inject IJSRuntime JS
+@* Kanban — port of dist/pages/kanban.html. SortableJS drag-and-drop across lanes via JS interop. *@
+
+<PageTitle>Kanban Board · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<style>
+    .kanban-board {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        align-items: start;
+    }
+    .kanban-lane {
+        background: var(--bs-tertiary-bg);
+        border-radius: var(--bs-border-radius);
+        padding: 0.75rem;
+        min-height: 8rem;
+    }
+    .kanban-lane-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        padding: 0 0.25rem;
+    }
+    .kanban-cards {
+        min-height: 4rem;
+    }
+    .kanban-card {
+        background: var(--bs-body-bg);
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        cursor: grab;
+        transition: box-shadow 0.15s ease;
+    }
+    .kanban-card:hover {
+        box-shadow: var(--bs-box-shadow-sm);
+    }
+    .kanban-card.sortable-ghost {
+        opacity: 0.4;
+        background: var(--bs-primary-bg-subtle);
+        border-style: dashed;
+    }
+    .kanban-card.sortable-drag {
+        cursor: grabbing;
+        box-shadow: var(--bs-box-shadow);
+        transform: rotate(2deg);
+    }
+    .kanban-assignees {
+        display: inline-flex;
+    }
+    .kanban-assignee {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 50%;
+        background: var(--bs-secondary-bg);
+        color: var(--bs-secondary-color);
+        font-size: 0.7rem;
+        font-weight: 600;
+        border: 2px solid var(--bs-body-bg);
+        margin-left: -0.5rem;
+    }
+    .kanban-assignee:first-child {
+        margin-left: 0;
+    }
+</style>
+
+<AppContent Title="Kanban Board" Breadcrumbs="_breadcrumbs">
+    <div class="kanban-board" id="kanban-board">
+        @foreach (var lane in _lanes)
+        {
+            <div class="kanban-lane">
+                <div class="kanban-lane-header">
+                    <h6 class="mb-0 fw-semibold">
+                        @lane.Title <span class="badge @lane.BadgeClass">@lane.Cards.Count</span>
+                    </h6>
+                    <button class="btn btn-sm btn-link text-secondary p-0"><i class="bi bi-three-dots"></i></button>
+                </div>
+                <div class="kanban-cards" data-lane-id="@lane.Id" @ref="lane.Ref">
+                    @foreach (var card in lane.Cards)
+                    {
+                        <article class="kanban-card">
+                            <span class="badge @card.LabelClass mb-2">@card.Label</span>
+                            <p class="fw-semibold mb-1 small">@card.Title</p>
+                            @if (!string.IsNullOrEmpty(card.Body))
+                            {
+                                <p class="text-secondary small mb-2">@card.Body</p>
+                            }
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="kanban-assignees">
+                                    @foreach (var a in card.Assignees)
+                                    {
+                                        <span class="kanban-assignee" title="@a">@a</span>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(card.Date))
+                                {
+                                    <small class="text-secondary"><i class="bi bi-calendar-event me-1"></i>@card.Date</small>
+                                }
+                            </div>
+                        </article>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</AppContent>
+
+@code {
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+    [
+        new("Home", "/"),
+        new("Kanban"),
+    ];
+
+    private sealed class TaskCard
+    {
+        public string Label { get; init; } = "";
+        public string LabelClass { get; init; } = "text-bg-primary";
+        public string Title { get; init; } = "";
+        public string? Body { get; init; }
+        public string[] Assignees { get; init; } = [];
+        public string? Date { get; init; }
+    }
+
+    private sealed class Lane
+    {
+        public string Id { get; init; } = "";
+        public string Title { get; init; } = "";
+        public string BadgeClass { get; init; } = "text-bg-secondary";
+        public List<TaskCard> Cards { get; init; } = [];
+        public ElementReference Ref { get; set; }
+    }
+
+    private readonly List<Lane> _lanes =
+    [
+        new Lane
+        {
+            Id = "backlog", Title = "Backlog", BadgeClass = "text-bg-secondary",
+            Cards =
+            [
+                new TaskCard { Label = "tech debt", LabelClass = "text-bg-secondary", Title = "Audit unused SCSS variables", Body = "Identify deprecated Bootstrap 5.3.4 variables and add comments.", Assignees = ["DM"] },
+                new TaskCard { Label = "docs", LabelClass = "text-bg-info", Title = "Document hreflang setup", Assignees = ["JD"] },
+                new TaskCard { Label = "bug", LabelClass = "text-bg-danger", Title = "Investigate Safari iOS calendar drag bug", Assignees = ["OB", "MK"], Date = "May 28" },
+            ],
+        },
+        new Lane
+        {
+            Id = "todo", Title = "To do", BadgeClass = "text-bg-primary",
+            Cards =
+            [
+                new TaskCard { Label = "feature", LabelClass = "text-bg-primary", Title = "Add Tom Select recommended-integration doc", Body = "Cover install, theming, single + multi select examples.", Assignees = ["JD"], Date = "May 24" },
+                new TaskCard { Label = "feature", LabelClass = "text-bg-primary", Title = "Wire up profile page avatar upload", Assignees = ["EM"] },
+            ],
+        },
+        new Lane
+        {
+            Id = "in-progress", Title = "In progress", BadgeClass = "text-bg-warning",
+            Cards =
+            [
+                new TaskCard { Label = "feature", LabelClass = "text-bg-primary", Title = "Build kanban board demo", Body = "SortableJS, draggable between lanes, MIT license.", Assignees = ["JD"], Date = "Today" },
+                new TaskCard { Label = "qa", LabelClass = "text-bg-warning", Title = "Tabulator + FullCalendar integration QA", Assignees = ["OB"] },
+            ],
+        },
+        new Lane
+        {
+            Id = "done", Title = "Done", BadgeClass = "text-bg-success",
+            Cards =
+            [
+                new TaskCard { Label = "feature", LabelClass = "text-bg-primary", Title = "Upgrade to Bootstrap 5.3.8", Assignees = ["DM"] },
+                new TaskCard { Label = "feature", LabelClass = "text-bg-primary", Title = "Ship 8 Tier-1 page templates", Body = "Profile, settings, invoice, pricing, FAQ, 404/500/maintenance.", Assignees = ["JD", "OB"] },
+                new TaskCard { Label = "tech debt", LabelClass = "text-bg-secondary", Title = "Drop dead eslint-config-xo deps", Assignees = ["DM"] },
+            ],
+        },
+    ];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var refs = _lanes.Select(l => l.Ref).ToArray();
+            await JS.InvokeVoidAsync("adminlteDemo.kanban", refs);
+        }
+    }
+}

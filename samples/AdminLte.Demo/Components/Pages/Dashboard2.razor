@@ -1,0 +1,270 @@
+@page "/dashboard/v2"
+@inject IJSRuntime JS
+@* Dashboard v2 — port of the core dist/index2.html. Charts render via ApexCharts JS interop. *@
+
+<PageTitle>Dashboard v2 · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Dashboard v2" Breadcrumbs="_breadcrumbs">
+    @* Info boxes *@
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <InfoBox Theme="primary" Variant="solid" Icon="bi-gear-fill" Text="CPU Traffic" Title="10" Unit="%" BoxClass="shadow-sm" />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <InfoBox Theme="danger" Variant="solid" Icon="bi-hand-thumbs-up-fill" Text="Likes" Title="41,410" BoxClass="shadow-sm" />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <InfoBox Theme="success" Variant="solid" Icon="bi-cart-fill" Text="Sales" Title="760" BoxClass="shadow-sm" />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <InfoBox Theme="warning" Variant="solid" Icon="bi-people-fill" Text="New Members" Title="2,000" BoxClass="shadow-sm" />
+        </div>
+    </div>
+
+    @* Monthly recap report — sales chart + goal completion *@
+    <div class="row">
+        <div class="col-md-12">
+            <Card Title="Monthly Recap Report" Collapsible="true" Removable="true">
+                <ChildContent>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="text-center"><strong>Sales: 1 Jan, 2023 - 30 Jul, 2023</strong></p>
+                            <div @ref="_salesChart"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="text-center"><strong>Goal Completion</strong></p>
+                            <ProgressGroup Label="Add Products to Cart" Value="160" Max="200" Theme="primary" />
+                            <ProgressGroup Label="Complete Purchase" Value="310" Max="400" Theme="danger" />
+                            <ProgressGroup Label="Visit Premium Page" Value="480" Max="800" Theme="success" />
+                            <ProgressGroup Label="Send Inquiries" Value="250" Max="500" Theme="warning" />
+                        </div>
+                    </div>
+                </ChildContent>
+                <FooterContent>
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <div class="text-center border-end">
+                                <span class="text-success"><i class="bi bi-caret-up-fill"></i> 17%</span>
+                                <h5 class="fw-bold mb-0">$35,210.43</h5>
+                                <span class="text-uppercase">TOTAL REVENUE</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center border-end">
+                                <span class="text-info"><i class="bi bi-caret-left-fill"></i> 0%</span>
+                                <h5 class="fw-bold mb-0">$10,390.90</h5>
+                                <span class="text-uppercase">TOTAL COST</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center border-end">
+                                <span class="text-success"><i class="bi bi-caret-up-fill"></i> 20%</span>
+                                <h5 class="fw-bold mb-0">$24,813.53</h5>
+                                <span class="text-uppercase">TOTAL PROFIT</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center">
+                                <span class="text-danger"><i class="bi bi-caret-down-fill"></i> 18%</span>
+                                <h5 class="fw-bold mb-0">1200</h5>
+                                <span class="text-uppercase">GOAL COMPLETIONS</span>
+                            </div>
+                        </div>
+                    </div>
+                </FooterContent>
+            </Card>
+        </div>
+    </div>
+
+    @* Direct chat + latest members *@
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <DirectChat Title="Direct Chat" Theme="warning" Badge="3"
+                                Messages="_messages" Contacts="_contacts">
+                        <FooterContent>
+                            <form>
+                                <div class="input-group">
+                                    <input type="text" name="message" placeholder="Type Message ..." class="form-control" />
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-warning">Send</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </FooterContent>
+                    </DirectChat>
+                </div>
+
+                <div class="col-md-6">
+                    <Card Title="Latest Members" Collapsible="true" Removable="true" BodyClass="p-0">
+                        <Tools>
+                            <span class="badge text-bg-danger">8 New Members</span>
+                        </Tools>
+                        <ChildContent>
+                            <div class="row text-center m-1">
+                                @foreach (var m in _members)
+                                {
+                                    <div class="col-3 p-2">
+                                        <img class="img-fluid rounded-circle" src="@m.Image" alt="@m.Name" />
+                                        <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">@m.Name</a>
+                                        <div class="fs-8">@m.When</div>
+                                    </div>
+                                }
+                            </div>
+                        </ChildContent>
+                    </Card>
+                </div>
+            </div>
+
+            @* Latest orders table with sparklines (static) *@
+            <Card Title="Latest Orders" Collapsible="true" Removable="true" BodyClass="p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Item</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="/invoice" class="link-primary">OR9842</a></td>
+                                <td>Call of Duty IV</td>
+                                <td><span class="badge text-bg-success">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/invoice" class="link-primary">OR1848</a></td>
+                                <td>Samsung Smart TV</td>
+                                <td><span class="badge text-bg-warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/invoice" class="link-primary">OR7429</a></td>
+                                <td>iPhone 6 Plus</td>
+                                <td><span class="badge text-bg-danger">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/invoice" class="link-primary">OR7429</a></td>
+                                <td>Samsung Smart TV</td>
+                                <td><span class="badge text-bg-info">Processing</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </Card>
+        </div>
+
+        @* Right column: info boxes style 2 + browser usage donut + product list *@
+        <div class="col-md-4">
+            <InfoBox Theme="warning" Variant="solid" Icon="bi-tag-fill" Text="Inventory" Title="5,200" BoxClass="mb-3" />
+            <InfoBox Theme="success" Variant="solid" Icon="bi-heart-fill" Text="Mentions" Title="92,050" BoxClass="mb-3" />
+            <InfoBox Theme="danger" Variant="solid" Icon="bi-cloud-download" Text="Downloads" Title="114,381" BoxClass="mb-3" />
+            <InfoBox Theme="info" Variant="solid" Icon="bi-chat-fill" Text="Direct Messages" Title="163,921" BoxClass="mb-3" />
+
+            <Card Title="Browser Usage" Collapsible="true" Removable="true">
+                <ChildContent>
+                    <div class="row">
+                        <div class="col-12">
+                            <div @ref="_donut"></div>
+                        </div>
+                    </div>
+                </ChildContent>
+                <FooterContent>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">United States of America
+                                <span class="float-end text-danger"><i class="bi bi-arrow-down fs-7"></i> 12%</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">India
+                                <span class="float-end text-success"><i class="bi bi-arrow-up fs-7"></i> 4%</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">China
+                                <span class="float-end text-info"><i class="bi bi-arrow-left fs-7"></i> 0%</span></a>
+                        </li>
+                    </ul>
+                </FooterContent>
+            </Card>
+
+            <Card Title="Recently Added Products" Collapsible="true" Removable="true" BodyClass="p-0">
+                <div class="px-2">
+                    <div class="d-flex border-top py-2 px-1">
+                        <div class="col-10">
+                            <a href="javascript:void(0)" class="fw-bold">Samsung TV
+                                <span class="badge text-bg-warning float-end">$1800</span></a>
+                            <div class="text-truncate">Samsung 32" 1080p 60Hz LED Smart HDTV.</div>
+                        </div>
+                    </div>
+                    <div class="d-flex border-top py-2 px-1">
+                        <div class="col-10">
+                            <a href="javascript:void(0)" class="fw-bold">Bicycle
+                                <span class="badge text-bg-info float-end">$700</span></a>
+                            <div class="text-truncate">26" Mongoose Dolomite Men's 7-speed, Navy Blue.</div>
+                        </div>
+                    </div>
+                    <div class="d-flex border-top py-2 px-1">
+                        <div class="col-10">
+                            <a href="javascript:void(0)" class="fw-bold">Xbox One
+                                <span class="badge text-bg-danger float-end">$350</span></a>
+                            <div class="text-truncate">Xbox One Console Bundle with Halo Master Chief Collection.</div>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private ElementReference _salesChart;
+    private ElementReference _donut;
+
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+    [
+        new("Home", "/"),
+        new("Dashboard v2"),
+    ];
+
+    private sealed record Member(string Name, string When, string Image);
+
+    private readonly IReadOnlyList<Member> _members =
+    [
+        new("Alexander Pierce", "Today", "https://www.gravatar.com/avatar/01?d=mp&s=128"),
+        new("Norman", "Yesterday", "https://www.gravatar.com/avatar/02?d=mp&s=128"),
+        new("Jane", "12 Jan", "https://www.gravatar.com/avatar/03?d=mp&s=128"),
+        new("John", "12 Jan", "https://www.gravatar.com/avatar/04?d=mp&s=128"),
+        new("Alexander", "13 Jan", "https://www.gravatar.com/avatar/05?d=mp&s=128"),
+        new("Sarah", "14 Jan", "https://www.gravatar.com/avatar/06?d=mp&s=128"),
+        new("Nora", "15 Jan", "https://www.gravatar.com/avatar/07?d=mp&s=128"),
+        new("Nadia", "15 Jan", "https://www.gravatar.com/avatar/08?d=mp&s=128"),
+    ];
+
+    private readonly IReadOnlyList<DirectChat.Message> _messages =
+    [
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 2:00 pm", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128", Text = "Is this template really for free? That's unbelievable!" },
+        new() { From = "Sarah Bullock", Timestamp = "23 Jan 2:05 pm", Image = "https://www.gravatar.com/avatar/06?d=mp&s=128", Text = "You better believe it!", IsOwn = true },
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 5:37 pm", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128", Text = "Working with AdminLTE on a great new app! Wanna join?" },
+        new() { From = "Sarah Bullock", Timestamp = "23 Jan 6:10 pm", Image = "https://www.gravatar.com/avatar/06?d=mp&s=128", Text = "I would love to.", IsOwn = true },
+    ];
+
+    private readonly IReadOnlyList<DirectChat.Contact> _contacts =
+    [
+        new() { Name = "Count Dracula", Date = "2/28/2023", Preview = "How have you been? I was...", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128" },
+        new() { Name = "Sarah Doe", Date = "2/23/2023", Preview = "I will be waiting for...", Image = "https://www.gravatar.com/avatar/07?d=mp&s=128" },
+        new() { Name = "Nadia Jolie", Date = "2/20/2023", Preview = "I'll call you back at...", Image = "https://www.gravatar.com/avatar/03?d=mp&s=128" },
+        new() { Name = "Nora S. Vans", Date = "2/10/2023", Preview = "Where is your new...", Image = "https://www.gravatar.com/avatar/05?d=mp&s=128" },
+        new() { Name = "John K.", Date = "1/27/2023", Preview = "Can I take a look at...", Image = "https://www.gravatar.com/avatar/04?d=mp&s=128" },
+        new() { Name = "Kenneth M.", Date = "1/4/2023", Preview = "Never mind I found...", Image = "https://www.gravatar.com/avatar/08?d=mp&s=128" },
+    ];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adminlteDemo.salesChart", _salesChart);
+            await JS.InvokeVoidAsync("adminlteDemo.donut", _donut);
+        }
+    }
+}

@@ -1,0 +1,46 @@
+@page "/forms/editor"
+@inject IJSRuntime JS
+@* Forms / Editor — a Quill rich-text editor initialised via JS interop. *@
+
+<PageTitle>Text Editor · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Text Editor" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        <div class="col-12">
+            <Card Title="Quill Editor" Icon="bi-pencil-square">
+                <Tools>
+                    <span class="badge text-bg-secondary">Snow theme</span>
+                </Tools>
+                <ChildContent>
+                    <p class="text-secondary small">
+                        A full-featured rich-text editor powered by
+                        <a href="https://quilljs.com/" target="_blank" rel="noopener">Quill 2</a> — no jQuery required.
+                    </p>
+                    <div @ref="_editor" style="min-height: 250px;">
+                        <p>Hello from <strong>AdminLTE 4</strong> for ASP.NET Core.</p>
+                        <p>This editor is initialised from Blazor via <code>IJSRuntime</code> interop.</p>
+                    </div>
+                </ChildContent>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private ElementReference _editor;
+
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+    [
+        new("Home", "/"),
+        new("Forms", "/forms/general"),
+        new("Editor"),
+    ];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adminlteDemo.quill", _editor);
+        }
+    }
+}

@@ -13,6 +13,10 @@
     <AdminLteStyles />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["AdminLte.Demo.styles.css"]" />
+
+    @* Plugin CSS for the JS-plugin demo pages (FullCalendar ships its CSS in its JS bundle). *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css">
+
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
@@ -22,5 +26,12 @@
     <script src="_framework/blazor.web.js"></script>
     @* Bootstrap bundle + AdminLTE JS, from the RCL. *@
     <AdminLteScripts />
+
+    @* CDN plugin libraries + the demo interop module for the JS-plugin pages. *@
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.7/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js"></script>
+    <script src="js/demo-interop.js"></script>
 </body>
 </html>

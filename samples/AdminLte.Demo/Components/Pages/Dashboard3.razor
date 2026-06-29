@@ -1,0 +1,166 @@
+@page "/dashboard/v3"
+@inject IJSRuntime JS
+@* Dashboard v3 — port of the core dist/index3.html. Charts render via ApexCharts JS interop. *@
+
+<PageTitle>Dashboard v3 · AdminLTE 4 for ASP.NET Core</PageTitle>
+
+<AppContent Title="Dashboard v3" Breadcrumbs="_breadcrumbs">
+    <div class="row">
+        @* Left column *@
+        <div class="col-lg-6">
+            <Card HeaderClass="border-0">
+                <HeaderContent>
+                    <div class="d-flex justify-content-between w-100">
+                        <h3 class="card-title">Online Store Visitors</h3>
+                        <a href="javascript:void(0);" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">View Report</a>
+                    </div>
+                </HeaderContent>
+                <ChildContent>
+                    <div class="d-flex">
+                        <p class="d-flex flex-column">
+                            <span class="fw-bold fs-5">820</span>
+                            <span>Visitors Over Time</span>
+                        </p>
+                        <p class="ms-auto d-flex flex-column text-end">
+                            <span class="text-success"><i class="bi bi-arrow-up"></i> 12.5%</span>
+                            <span class="text-secondary">Since last week</span>
+                        </p>
+                    </div>
+                    <div class="position-relative mb-4">
+                        <div @ref="_visitorsChart"></div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        <span class="me-2"><i class="bi bi-square-fill text-primary"></i> This Week</span>
+                        <span><i class="bi bi-square-fill text-secondary"></i> Last Week</span>
+                    </div>
+                </ChildContent>
+            </Card>
+
+            <Card Title="Products" HeaderClass="border-0" BodyClass="table-responsive p-0">
+                <Tools>
+                    <a href="#" class="btn btn-tool btn-sm"><i class="bi bi-download"></i></a>
+                    <a href="#" class="btn btn-tool btn-sm"><i class="bi bi-list"></i></a>
+                </Tools>
+                <ChildContent>
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Sales</th>
+                            <th>More</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="https://www.gravatar.com/avatar/p1?d=identicon&s=32" alt="Some Product" class="rounded-circle img-size-32 me-2" /> Some Product</td>
+                            <td>$13 USD</td>
+                            <td><small class="text-success me-1"><i class="bi bi-arrow-up"></i> 12%</small> 12,000 Sold</td>
+                            <td><a href="#" class="text-secondary"><i class="bi bi-search"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td><img src="https://www.gravatar.com/avatar/p2?d=identicon&s=32" alt="Another Product" class="rounded-circle img-size-32 me-2" /> Another Product</td>
+                            <td>$29 USD</td>
+                            <td><small class="text-info me-1"><i class="bi bi-arrow-down"></i> 0.5%</small> 123,234 Sold</td>
+                            <td><a href="#" class="text-secondary"><i class="bi bi-search"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td><img src="https://www.gravatar.com/avatar/p3?d=identicon&s=32" alt="Amazing Product" class="rounded-circle img-size-32 me-2" /> Amazing Product</td>
+                            <td>$1,230 USD</td>
+                            <td><small class="text-danger me-1"><i class="bi bi-arrow-down"></i> 3%</small> 198 Sold</td>
+                            <td><a href="#" class="text-secondary"><i class="bi bi-search"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td><img src="https://www.gravatar.com/avatar/p4?d=identicon&s=32" alt="Perfect Item" class="rounded-circle img-size-32 me-2" /> Perfect Item <span class="badge text-bg-danger">NEW</span></td>
+                            <td>$199 USD</td>
+                            <td><small class="text-success me-1"><i class="bi bi-arrow-up"></i> 63%</small> 87 Sold</td>
+                            <td><a href="#" class="text-secondary"><i class="bi bi-search"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </ChildContent>
+            </Card>
+        </div>
+
+        @* Right column *@
+        <div class="col-lg-6">
+            <Card HeaderClass="border-0">
+                <HeaderContent>
+                    <div class="d-flex justify-content-between w-100">
+                        <h3 class="card-title">Sales</h3>
+                        <a href="javascript:void(0);" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">View Report</a>
+                    </div>
+                </HeaderContent>
+                <ChildContent>
+                    <div class="d-flex">
+                        <p class="d-flex flex-column">
+                            <span class="fw-bold fs-5">$18,230.00</span>
+                            <span>Sales Over Time</span>
+                        </p>
+                        <p class="ms-auto d-flex flex-column text-end">
+                            <span class="text-success"><i class="bi bi-arrow-up"></i> 33.1%</span>
+                            <span class="text-secondary">Since Past Year</span>
+                        </p>
+                    </div>
+                    <div class="position-relative mb-4">
+                        <div @ref="_salesBar"></div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        <span class="me-2"><i class="bi bi-square-fill text-primary"></i> This year</span>
+                        <span><i class="bi bi-square-fill text-secondary"></i> Last year</span>
+                    </div>
+                </ChildContent>
+            </Card>
+
+            <Card Title="Online Store Overview" HeaderClass="border-0">
+                <Tools>
+                    <a href="#" class="btn btn-sm btn-tool"><i class="bi bi-download"></i></a>
+                    <a href="#" class="btn btn-sm btn-tool"><i class="bi bi-list"></i></a>
+                </Tools>
+                <ChildContent>
+                    <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                        <p class="text-success fs-2"><i class="bi bi-arrow-repeat"></i></p>
+                        <p class="d-flex flex-column text-end">
+                            <span class="fw-bold"><i class="bi bi-graph-up-arrow text-success"></i> 12%</span>
+                            <span class="text-secondary">CONVERSION RATE</span>
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                        <p class="text-info fs-2"><i class="bi bi-cart"></i></p>
+                        <p class="d-flex flex-column text-end">
+                            <span class="fw-bold"><i class="bi bi-graph-up-arrow text-info"></i> 0.8%</span>
+                            <span class="text-secondary">SALES RATE</span>
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-0">
+                        <p class="text-danger fs-2"><i class="bi bi-people"></i></p>
+                        <p class="d-flex flex-column text-end">
+                            <span class="fw-bold"><i class="bi bi-graph-down-arrow text-danger"></i> 1%</span>
+                            <span class="text-secondary">REGISTRATION RATE</span>
+                        </p>
+                    </div>
+                </ChildContent>
+            </Card>
+        </div>
+    </div>
+</AppContent>
+
+@code {
+    private ElementReference _visitorsChart;
+    private ElementReference _salesBar;
+
+    private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
+    [
+        new("Home", "/"),
+        new("Dashboard v3"),
+    ];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adminlteDemo.visitorsChart", _visitorsChart);
+            await JS.InvokeVoidAsync("adminlteDemo.salesBar", _salesBar);
+        }
+    }
+}
