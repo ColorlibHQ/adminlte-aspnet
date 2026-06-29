@@ -4,6 +4,158 @@
 // The ApexCharts option objects are copied verbatim from the core AdminLTE
 // dist demo pages (index2.html / index3.html).
 window.adminlteDemo = {
+  // ---- Dashboard v1 (index.html) -----------------------------------------
+
+  // Sales Value area chart (copied verbatim from the core dist/index.html demo).
+  salesAreaChart(el) {
+    if (!el) return;
+    const sales_chart_options = {
+      series: [
+        {
+          name: 'Digital Goods',
+          data: [28, 48, 40, 19, 86, 27, 90],
+        },
+        {
+          name: 'Electronics',
+          data: [65, 59, 80, 81, 56, 55, 40],
+        },
+      ],
+      chart: {
+        height: 300,
+        type: 'area',
+        toolbar: {
+          show: false,
+        },
+      },
+      legend: {
+        show: false,
+      },
+      colors: ['#0d6efd', '#20c997'],
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: [
+          '2023-01-01',
+          '2023-02-01',
+          '2023-03-01',
+          '2023-04-01',
+          '2023-05-01',
+          '2023-06-01',
+          '2023-07-01',
+        ],
+      },
+      tooltip: {
+        x: {
+          format: 'MMMM yyyy',
+        },
+      },
+    };
+    new ApexCharts(el, sales_chart_options).render();
+  },
+
+  // World map (jsvectormap) + the three footer sparklines, copied verbatim from
+  // the core dist/index.html demo. The sparklines target the #sparkline-1/2/3
+  // ids rendered alongside the map card.
+  worldMap(el) {
+    if (!el || typeof jsVectorMap === 'undefined') return;
+
+    // World map by jsVectorMap
+    new jsVectorMap({
+      selector: el,
+      map: 'world',
+    });
+
+    // Sparkline charts
+    const option_sparkline1 = {
+      series: [
+        {
+          data: [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021],
+        },
+      ],
+      chart: {
+        type: 'area',
+        height: 50,
+        sparkline: {
+          enabled: true,
+        },
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      fill: {
+        opacity: 0.3,
+      },
+      yaxis: {
+        min: 0,
+      },
+      colors: ['#DCE6EC'],
+    };
+
+    const sparkline1El = document.querySelector('#sparkline-1');
+    if (sparkline1El) new ApexCharts(sparkline1El, option_sparkline1).render();
+
+    const option_sparkline2 = {
+      series: [
+        {
+          data: [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921],
+        },
+      ],
+      chart: {
+        type: 'area',
+        height: 50,
+        sparkline: {
+          enabled: true,
+        },
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      fill: {
+        opacity: 0.3,
+      },
+      yaxis: {
+        min: 0,
+      },
+      colors: ['#DCE6EC'],
+    };
+
+    const sparkline2El = document.querySelector('#sparkline-2');
+    if (sparkline2El) new ApexCharts(sparkline2El, option_sparkline2).render();
+
+    const option_sparkline3 = {
+      series: [
+        {
+          data: [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21],
+        },
+      ],
+      chart: {
+        type: 'area',
+        height: 50,
+        sparkline: {
+          enabled: true,
+        },
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      fill: {
+        opacity: 0.3,
+      },
+      yaxis: {
+        min: 0,
+      },
+      colors: ['#DCE6EC'],
+    };
+
+    const sparkline3El = document.querySelector('#sparkline-3');
+    if (sparkline3El) new ApexCharts(sparkline3El, option_sparkline3).render();
+  },
+
   // ---- Dashboard v2 (index2.html) ----------------------------------------
 
   // Monthly sales area chart.

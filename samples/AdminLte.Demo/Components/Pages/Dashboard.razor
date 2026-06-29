@@ -1,98 +1,125 @@
 @page "/"
-@* Dashboard — dogfoods small boxes, info boxes, cards and a timeline. *@
+@inject IJSRuntime JS
+@* Dashboard — 1:1 port of the core dist/index.html. Sales area chart renders via
+   ApexCharts and the world map via jsvectormap, both through JS interop. *@
 
-<PageTitle>Dashboard · AdminLTE 4 for ASP.NET Core</PageTitle>
+<PageTitle>AdminLTE v4 | Dashboard · AdminLTE 4 for ASP.NET Core</PageTitle>
 
 <AppContent Title="Dashboard" Breadcrumbs="_breadcrumbs">
+    @* Small box row *@
     <div class="row">
         <div class="col-lg-3 col-6">
-            <SmallBox Theme="primary" Title="150" Text="New Orders" Icon="bi-bag-fill" Url="/widgets/small-boxes" />
+            <SmallBox Theme="primary" Title="150" Text="New Orders" Icon="bi-bag-fill" Url="#" />
         </div>
         <div class="col-lg-3 col-6">
-            <SmallBox Theme="success" Title="53%" Text="Bounce Rate" Icon="bi-graph-up" Url="/widgets/small-boxes" />
+            <SmallBox Theme="success" Title="53%" Text="Bounce Rate" Icon="bi-bar-chart-fill" Url="#" />
         </div>
         <div class="col-lg-3 col-6">
-            <SmallBox Theme="warning" Title="44" Text="User Registrations" Icon="bi-person-plus-fill" Url="/widgets/small-boxes" />
+            <SmallBox Theme="warning" Title="44" Text="User Registrations" Icon="bi-person-add" Url="#" />
         </div>
         <div class="col-lg-3 col-6">
-            <SmallBox Theme="danger" Title="65" Text="Unique Visitors" Icon="bi-pie-chart-fill" Url="/widgets/small-boxes" />
+            <SmallBox Theme="danger" Title="65" Text="Unique Visitors" Icon="bi-pie-chart-fill" Url="#" />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-3 col-sm-6">
-            <InfoBox Theme="info" Icon="bi-envelope-fill" Text="Messages" Title="1,410" />
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <InfoBox Theme="danger" Icon="bi-flag-fill" Text="Bookmarks" Title="410" />
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <InfoBox Theme="success" Icon="bi-cloud-download-fill" Text="Downloads" Title="13,648" Progress="70" ProgressText="70% increase" />
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <InfoBox Theme="warning" Icon="bi-star-fill" Text="Likes" Title="93,139" Progress="50" ProgressText="50% increase" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8">
-            <Card Title="Monthly Recap" Icon="bi-bar-chart-line" Theme="primary" Variant="outline" Collapsible="true">
-                <p>This card, the small boxes, info boxes and the sidebar menu are all driven by the
-                    <code>ColorlibHQ.AdminLTE.AspNetCore</code> Blazor components.</p>
-                <Progress Value="80" Theme="primary" ShowLabel="true" />
-                <div class="mt-2"></div>
-                <Progress Value="55" Theme="success" Striped="true" Animated="true" ShowLabel="true" />
-                <div class="mt-3 d-flex gap-2">
-                    <Button Theme="primary" Icon="bi-download" Label="Export" />
-                    <Button Theme="secondary" Outline="true" Icon="bi-arrow-clockwise" Label="Refresh" />
-                </div>
+        @* Start col *@
+        <div class="col-lg-7 connectedSortable">
+            @* Sales Value area chart *@
+            <Card Title="Sales Value" BodyClass="">
+                <ChildContent>
+                    <div @ref="_chartRef"></div>
+                </ChildContent>
             </Card>
 
-            <Card Title="Quick stats" Theme="info">
-                <div class="row">
-                    <div class="col-sm-3 col-6">
-                        <DescriptionBlock Header="$35,210.43" Text="TOTAL REVENUE" Percentage="17" />
-                    </div>
-                    <div class="col-sm-3 col-6">
-                        <DescriptionBlock Header="1,200" Text="GOAL COMPLETION" Percentage="-2" />
-                    </div>
-                    <div class="col-sm-3 col-6">
-                        <DescriptionBlock Header="320" Text="NEW CUSTOMERS" Percentage="12" />
-                    </div>
-                    <div class="col-sm-3 col-6">
-                        <DescriptionBlock Header="65%" Text="CONVERSIONS" Percentage="7" />
+            @* Direct Chat *@
+            <DirectChat Title="Direct Chat" Theme="primary" Badge="3"
+                        Messages="_messages" Contacts="_contacts">
+                <FooterContent>
+                    <form action="#" method="post">
+                        <div class="input-group">
+                            <input type="text" name="message" placeholder="Type Message ..." class="form-control" />
+                            <span class="input-group-append">
+                                <button type="button" class="btn btn-primary">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </FooterContent>
+            </DirectChat>
+        </div>
+        @* /.Start col *@
+
+        @* Start col *@
+        <div class="col-lg-5 connectedSortable">
+            <div class="card text-white bg-primary bg-gradient border-primary mb-4">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Sales Value</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-lte-toggle="card-collapse">
+                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                        </button>
                     </div>
                 </div>
-            </Card>
+                <div class="card-body">
+                    <div @ref="_mapRef" id="world-map" style="height: 220px"></div>
+                </div>
+                <div class="card-footer border-0">
+                    <div class="row">
+                        <div class="col-4 text-center">
+                            <div id="sparkline-1" class="text-dark"></div>
+                            <div class="text-white">Visitors</div>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div id="sparkline-2" class="text-dark"></div>
+                            <div class="text-white">Online</div>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div id="sparkline-3" class="text-dark"></div>
+                            <div class="text-white">Sales</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="col-md-4">
-            <Card Title="Activity" Theme="secondary" Variant="outline">
-                <Timeline Items="_timeline" />
-            </Card>
-
-            <Alert Theme="success" Title="Welcome" Icon="bi-check-circle-fill" Dismissible="true">
-                You're running the official AdminLTE 4 ASP.NET Core port. Press <kbd>⌘K</kbd> to search.
-            </Alert>
-
-            <Callout Theme="info" Title="Tip">
-                Toggle light / dark / auto from the topbar — your choice is saved to localStorage.
-            </Callout>
-        </div>
+        @* /.Start col *@
     </div>
 </AppContent>
 
 @code {
+    private ElementReference _chartRef;
+    private ElementReference _mapRef;
+
     private readonly IReadOnlyList<Breadcrumb.Crumb> _breadcrumbs =
     [
-        new("Home", "/"),
+        new("Home", "#"),
         new("Dashboard"),
     ];
 
-    private readonly IReadOnlyList<Timeline.Entry> _timeline =
+    private readonly IReadOnlyList<DirectChat.Message> _messages =
     [
-        new() { Icon = "bi-bag", IconTheme = "primary", Title = "New order #1024", Time = "12:30", Body = "A new order was placed." },
-        new() { Icon = "bi-person-plus", IconTheme = "success", Title = "New user registered", Time = "10:05" },
-        new() { Icon = "bi-envelope", IconTheme = "info", Title = "3 new messages", Time = "09:15" },
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 2:00 pm", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128", Text = "Is this template really for free? That's unbelievable!" },
+        new() { From = "Sarah Bullock", Timestamp = "23 Jan 2:05 pm", Image = "https://www.gravatar.com/avatar/03?d=mp&s=128", Text = "You better believe it!", IsOwn = true },
+        new() { From = "Alexander Pierce", Timestamp = "23 Jan 5:37 pm", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128", Text = "Working with AdminLTE on a great new app! Wanna join?" },
+        new() { From = "Sarah Bullock", Timestamp = "23 Jan 6:10 pm", Image = "https://www.gravatar.com/avatar/03?d=mp&s=128", Text = "I would love to.", IsOwn = true },
     ];
+
+    private readonly IReadOnlyList<DirectChat.Contact> _contacts =
+    [
+        new() { Name = "Count Dracula", Date = "2/28/2023", Preview = "How have you been? I was...", Image = "https://www.gravatar.com/avatar/01?d=mp&s=128" },
+        new() { Name = "Sarah Doe", Date = "2/23/2023", Preview = "I will be waiting for...", Image = "https://www.gravatar.com/avatar/07?d=mp&s=128" },
+        new() { Name = "Nadia Jolie", Date = "2/20/2023", Preview = "I'll call you back at...", Image = "https://www.gravatar.com/avatar/03?d=mp&s=128" },
+        new() { Name = "Nora S. Vans", Date = "2/10/2023", Preview = "Where is your new...", Image = "https://www.gravatar.com/avatar/05?d=mp&s=128" },
+        new() { Name = "John K.", Date = "1/27/2023", Preview = "Can I take a look at...", Image = "https://www.gravatar.com/avatar/06?d=mp&s=128" },
+        new() { Name = "Kenneth M.", Date = "1/4/2023", Preview = "Never mind I found...", Image = "https://www.gravatar.com/avatar/08?d=mp&s=128" },
+    ];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adminlteDemo.salesAreaChart", _chartRef);
+            await JS.InvokeVoidAsync("adminlteDemo.worldMap", _mapRef);
+        }
+    }
 }
