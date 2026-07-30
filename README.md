@@ -37,7 +37,7 @@ The same AdminLTE 4 dashboard, in the framework you know best — you're looking
 <!-- ADMINLTE-ECOSYSTEM:END -->
 
 <p align="center">
-  <a href="https://aspnet.adminlte.io"><img src=".github/preview.png" alt="AdminLTE 4 for ASP.NET — dashboard preview" width="100%"></a>
+  <a href="https://aspnet.adminlte.io"><img src=".github/preview.webp" alt="AdminLTE 4 for ASP.NET — dashboard preview" width="100%"></a>
 </p>
 
 
