@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2026-08-19
 
+### Fixed
+
+- **The NuGet package page showed raw HTML as text.** nuget.org renders a
+  Markdown subset and escapes raw HTML, so the GitHub README's centred
+  `<p align="center">` hero, the `<div>` ecosystem badge strip and the preview
+  `<img>` printed verbatim — 23 lines of markup as visible text — and the
+  preview image, referenced relatively, could not resolve at all. The package
+  now ships `NUGET.md`: the same content in plain Markdown with absolute URLs,
+  so it renders properly on nuget.org while `README.md` keeps its richer layout
+  on GitHub.
+
 ### Changed
 
 - **Bundled AdminLTE updated to 4.8.4** (from 4.0.0). The refreshed
