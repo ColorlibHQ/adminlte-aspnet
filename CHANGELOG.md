@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.3.0] - 2026-08-19
+## [0.3.1] - 2026-08-19
 
 ### Fixed
 
@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now ships `NUGET.md`: the same content in plain Markdown with absolute URLs,
   so it renders properly on nuget.org while `README.md` keeps its richer layout
   on GitHub.
+
+  0.3.0 was already published to NuGet when this was found, and NuGet versions
+  are immutable, so the corrected README ships here. No code differs from 0.3.0.
+
+## [0.3.0] - 2026-08-19
 
 ### Changed
 
@@ -42,6 +47,7 @@ First public release on NuGet: Blazor components, Tag Helpers and the bundled
 AdminLTE 4 static web assets. Tagged retroactively — the release was packed and
 pushed without step 4 of `RELEASING.md`, so no tag existed until now.
 
-[Unreleased]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ColorlibHQ/adminlte-aspnet/releases/tag/v0.2.0
