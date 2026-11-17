@@ -1,6 +1,6 @@
 @page "/dashboard/v3"
 @inject IJSRuntime JS
-@* Dashboard v3 — port of the core dist/index3.html. Charts render via ApexCharts JS interop. *@
+@* Dashboard v3 — port of the core dist/index3.html. Charts render via Chart.js JS interop. *@
 
 <PageTitle>Dashboard v3 · AdminLTE 4 for ASP.NET Core</PageTitle>
 
@@ -26,8 +26,8 @@
                             <span class="text-secondary">Since last week</span>
                         </p>
                     </div>
-                    <div class="position-relative mb-4">
-                        <div @ref="_visitorsChart"></div>
+                    <div class="position-relative mb-4" style="height: 200px">
+                        <canvas @ref="_visitorsChart" role="img" aria-label="Line chart of online store visitors this week and last week"></canvas>
                     </div>
                     <div class="d-flex flex-row justify-content-end">
                         <span class="me-2"><i class="bi bi-square-fill text-primary"></i> This Week</span>
@@ -102,8 +102,8 @@
                             <span class="text-secondary">Since Past Year</span>
                         </p>
                     </div>
-                    <div class="position-relative mb-4">
-                        <div @ref="_salesBar"></div>
+                    <div class="position-relative mb-4" style="height: 200px">
+                        <canvas @ref="_salesBar" role="img" aria-label="Column chart of net profit, revenue and free cash flow, February to October"></canvas>
                     </div>
                     <div class="d-flex flex-row justify-content-end">
                         <span class="me-2"><i class="bi bi-square-fill text-primary"></i> This year</span>

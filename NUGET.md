@@ -96,7 +96,7 @@ Reference the bundled CSS/JS in `App.razor` and wrap pages in `DashboardLayout`:
 - **Config-driven sidebar menu** — a strongly-typed `MenuItem` model bound from `appsettings.json`, with authorization policy/role support and automatic active-item highlighting.
 - **Light / dark / auto colour mode** — persisted to `localStorage`, with a blocking script so there is no flash of the wrong theme.
 - **Command palette** — searches your authorized menu, opens with Cmd/Ctrl+K.
-- **Bundled static web assets** — AdminLTE 4, Bootstrap 5.3.8 and Bootstrap Icons served from `/_content/ColorlibHQ.AdminLTE.AspNetCore/…`.
+- **Bundled static web assets** — AdminLTE 4, Bootstrap 5.3.9 and Bootstrap Icons served from `/_content/ColorlibHQ.AdminLTE.AspNetCore/…`.
 
 ## Requirements
 

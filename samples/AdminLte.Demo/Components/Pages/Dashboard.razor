@@ -1,7 +1,7 @@
 @page "/"
 @inject IJSRuntime JS
 @* Dashboard — 1:1 port of the core dist/index.html. Sales area chart renders via
-   ApexCharts and the world map via jsvectormap, both through JS interop. *@
+   Chart.js and the world map via jsvectormap, both through JS interop. *@
 
 <PageTitle>AdminLTE v4 | Dashboard · AdminLTE 4 for ASP.NET Core</PageTitle>
 
@@ -28,7 +28,9 @@
             @* Sales Value area chart *@
             <Card Title="Sales Value" BodyClass="">
                 <ChildContent>
-                    <div @ref="_chartRef"></div>
+                    <div class="position-relative" style="height: 300px">
+                        <canvas @ref="_chartRef" role="img" aria-label="Area chart of digital goods and electronics sales, January to July 2023"></canvas>
+                    </div>
                 </ChildContent>
             </Card>
 
@@ -67,15 +69,15 @@
                 <div class="card-footer border-0">
                     <div class="row">
                         <div class="col-4 text-center">
-                            <div id="sparkline-1" class="text-dark"></div>
+                            <div class="position-relative" style="height: 50px"><canvas id="sparkline-1" role="img" aria-label="Visitors trend"></canvas></div>
                             <div class="text-white">Visitors</div>
                         </div>
                         <div class="col-4 text-center">
-                            <div id="sparkline-2" class="text-dark"></div>
+                            <div class="position-relative" style="height: 50px"><canvas id="sparkline-2" role="img" aria-label="Online trend"></canvas></div>
                             <div class="text-white">Online</div>
                         </div>
                         <div class="col-4 text-center">
-                            <div id="sparkline-3" class="text-dark"></div>
+                            <div class="position-relative" style="height: 50px"><canvas id="sparkline-3" role="img" aria-label="Sales trend"></canvas></div>
                             <div class="text-white">Sales</div>
                         </div>
                     </div>

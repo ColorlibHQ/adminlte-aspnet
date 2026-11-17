@@ -54,7 +54,7 @@ The same AdminLTE 4 dashboard, in the framework you know best — you're looking
 - **Config-driven sidebar menu** — a strongly-typed `MenuItem` model bound from `appsettings.json` via the Options pattern (text, route/href, icon, badge, submenu, **authorization policy / role**), with automatic active-item highlighting.
 - **Light / dark / auto color mode** — persisted to `localStorage`, with a server-respecting blocking script so there's **no flash of the wrong theme** on first paint.
 - **⌘K command palette** — searches your (authorized) menu; opens via the topbar pill or Cmd/Ctrl+K.
-- **Bundled static web assets** — compiled AdminLTE 4, Bootstrap 5.3.8 and Bootstrap Icons served from `/_content/ColorlibHQ.AdminLTE.AspNetCore/…`. No npm build step required by consumers.
+- **Bundled static web assets** — compiled AdminLTE 4, Bootstrap 5.3.9 and Bootstrap Icons served from `/_content/ColorlibHQ.AdminLTE.AspNetCore/…`. No npm build step required by consumers.
 
 ## Requirements
 
