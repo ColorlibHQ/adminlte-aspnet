@@ -9,3 +9,13 @@ pre {
     white-space: pre-wrap;
     word-break: break-word;
 }
+
+/* Calendar: keep adjacent-month dates readable in both colour modes (FullCalendar 7). */
+#calendar .text-body-tertiary {
+    color: var(--bs-secondary-color) !important;
+}
+
+.draggable-event {
+    cursor: grab;
+    user-select: none;
+}

@@ -1,338 +1,150 @@
 // AdminLTE demo plugin interop for the Blazor (InteractiveServer) sample.
 // Each function initialises a third-party plugin against a DOM element passed
 // from a Blazor page (via @ref ElementReference) in OnAfterRenderAsync.
-// The ApexCharts option objects are copied verbatim from the core AdminLTE
-// dist demo pages (index2.html / index3.html).
+// The Chart.js configs are copied from the core AdminLTE dist demo pages
+// (index.html / index2.html / index3.html); the theme preset is chart-theme.js.
 window.adminlteDemo = {
   // ---- Dashboard v1 (index.html) -----------------------------------------
 
-  // Sales Value area chart (copied verbatim from the core dist/index.html demo).
+  // Sales Value area chart.
   salesAreaChart(el) {
-    if (!el) return;
-    const sales_chart_options = {
-      series: [
-        {
-          name: 'Digital Goods',
-          data: [28, 48, 40, 19, 86, 27, 90],
-        },
-        {
-          name: 'Electronics',
-          data: [65, 59, 80, 81, 56, 55, 40],
-        },
-      ],
-      chart: {
-        height: 300,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
-      },
-      legend: {
-        show: false,
-      },
-      colors: ['#0d6efd', '#20c997'],
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: [
-          '2023-01-01',
-          '2023-02-01',
-          '2023-03-01',
-          '2023-04-01',
-          '2023-05-01',
-          '2023-06-01',
-          '2023-07-01',
-        ],
-      },
-      tooltip: {
-        x: {
-          format: 'MMMM yyyy',
-        },
-      },
-    };
-    new ApexCharts(el, sales_chart_options).render();
+    if (!el || typeof Chart === 'undefined') return;
+    areaChart(el);
   },
 
-  // World map (jsvectormap) + the three footer sparklines, copied verbatim from
-  // the core dist/index.html demo. The sparklines target the #sparkline-1/2/3
-  // ids rendered alongside the map card.
+  // World map (jsvectormap) + the three footer sparklines (#sparkline-1/2/3).
   worldMap(el) {
     if (!el || typeof jsVectorMap === 'undefined') return;
 
-    // World map by jsVectorMap
     new jsVectorMap({
       selector: el,
       map: 'world',
     });
 
-    // Sparkline charts
-    const option_sparkline1 = {
-      series: [
-        {
-          data: [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021],
+    if (typeof Chart === 'undefined') return;
+    const sparkline = (selector, data) => {
+      const canvas = document.querySelector(selector);
+      if (!canvas) return;
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: data.map((value, index) => index + 1),
+          datasets: [
+            {
+              data,
+              borderColor: '#DCE6EC',
+              backgroundColor: 'rgba(220, 230, 236, 0.3)',
+              pointBackgroundColor: '#DCE6EC',
+              fill: true,
+            },
+          ],
         },
-      ],
-      chart: {
-        type: 'area',
-        height: 50,
-        sparkline: {
-          enabled: true,
+        options: {
+          layout: { padding: { top: 2 } },
+          plugins: {
+            legend: { display: false },
+            tooltip: { displayColors: false, callbacks: { title: () => '' } },
+          },
+          scales: {
+            x: { display: false },
+            y: { display: false, min: 0 },
+          },
         },
-      },
-      stroke: {
-        curve: 'straight',
-      },
-      fill: {
-        opacity: 0.3,
-      },
-      yaxis: {
-        min: 0,
-      },
-      colors: ['#DCE6EC'],
+      });
     };
 
-    const sparkline1El = document.querySelector('#sparkline-1');
-    if (sparkline1El) new ApexCharts(sparkline1El, option_sparkline1).render();
-
-    const option_sparkline2 = {
-      series: [
-        {
-          data: [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921],
-        },
-      ],
-      chart: {
-        type: 'area',
-        height: 50,
-        sparkline: {
-          enabled: true,
-        },
-      },
-      stroke: {
-        curve: 'straight',
-      },
-      fill: {
-        opacity: 0.3,
-      },
-      yaxis: {
-        min: 0,
-      },
-      colors: ['#DCE6EC'],
-    };
-
-    const sparkline2El = document.querySelector('#sparkline-2');
-    if (sparkline2El) new ApexCharts(sparkline2El, option_sparkline2).render();
-
-    const option_sparkline3 = {
-      series: [
-        {
-          data: [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21],
-        },
-      ],
-      chart: {
-        type: 'area',
-        height: 50,
-        sparkline: {
-          enabled: true,
-        },
-      },
-      stroke: {
-        curve: 'straight',
-      },
-      fill: {
-        opacity: 0.3,
-      },
-      yaxis: {
-        min: 0,
-      },
-      colors: ['#DCE6EC'],
-    };
-
-    const sparkline3El = document.querySelector('#sparkline-3');
-    if (sparkline3El) new ApexCharts(sparkline3El, option_sparkline3).render();
+    sparkline('#sparkline-1', [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021]);
+    sparkline('#sparkline-2', [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921]);
+    sparkline('#sparkline-3', [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21]);
   },
 
   // ---- Dashboard v2 (index2.html) ----------------------------------------
 
   // Monthly sales area chart.
   salesChart(el) {
-    if (!el) return;
-    const sales_chart_options = {
-      series: [
-        {
-          name: 'Digital Goods',
-          data: [28, 48, 40, 19, 86, 27, 90],
-        },
-        {
-          name: 'Electronics',
-          data: [65, 59, 80, 81, 56, 55, 40],
-        },
-      ],
-      chart: {
-        height: 180,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
-      },
-      legend: {
-        show: false,
-      },
-      colors: ['#0d6efd', '#20c997'],
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: [
-          '2023-01-01',
-          '2023-02-01',
-          '2023-03-01',
-          '2023-04-01',
-          '2023-05-01',
-          '2023-06-01',
-          '2023-07-01',
-        ],
-      },
-      tooltip: {
-        x: {
-          format: 'MMMM yyyy',
-        },
-      },
-    };
-    new ApexCharts(el, sales_chart_options).render();
+    if (!el || typeof Chart === 'undefined') return;
+    areaChart(el);
   },
 
   // Browser-usage donut chart.
   donut(el) {
-    if (!el) return;
-    const pie_chart_options = {
-      series: [700, 500, 400, 600, 300, 100],
-      chart: {
-        type: 'donut',
-        // Pin an explicit height to avoid an ApexCharts ResizeObserver feedback
-        // loop on browser zoom (most visible on Edge). Fixes #6019.
-        height: 350,
+    if (!el || typeof Chart === 'undefined') return;
+    new Chart(el, {
+      type: 'doughnut',
+      data: {
+        labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
+        datasets: [
+          {
+            label: 'Users',
+            data: [700, 500, 400, 600, 300, 100],
+            backgroundColor: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
+          },
+        ],
       },
-      labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
-      dataLabels: {
-        enabled: false,
+      options: {
+        cutout: '65%',
+        plugins: { legend: { position: 'right' } },
       },
-      colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
-    };
-    new ApexCharts(el, pie_chart_options).render();
+    });
   },
 
   // ---- Dashboard v3 (index3.html) ----------------------------------------
 
   // Online-store visitors line chart.
   visitorsChart(el) {
-    if (!el) return;
-    const visitors_chart_options = {
-      series: [
-        {
-          name: 'High - 2023',
-          data: [100, 120, 170, 167, 180, 177, 160],
-        },
-        {
-          name: 'Low - 2023',
-          data: [60, 80, 70, 67, 80, 77, 100],
-        },
-      ],
-      chart: {
-        height: 200,
-        type: 'line',
-        toolbar: {
-          show: false,
-        },
+    if (!el || typeof Chart === 'undefined') return;
+    new Chart(el, {
+      type: 'line',
+      data: {
+        labels: ['22th', '23th', '24th', '25th', '26th', '27th', '28th'],
+        datasets: [
+          {
+            label: 'High - 2023',
+            data: [100, 120, 170, 167, 180, 177, 160],
+            borderColor: '#0d6efd',
+            backgroundColor: '#0d6efd',
+            pointRadius: 3,
+            tension: 0.4,
+          },
+          {
+            label: 'Low - 2023',
+            data: [60, 80, 70, 67, 80, 77, 100],
+            borderColor: '#adb5bd',
+            backgroundColor: '#adb5bd',
+            pointRadius: 3,
+            tension: 0.4,
+          },
+        ],
       },
-      colors: ['#0d6efd', '#adb5bd'],
-      stroke: {
-        curve: 'smooth',
-      },
-      grid: {
-        borderColor: '#e7e7e7',
-        row: {
-          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-          opacity: 0.5,
-        },
-      },
-      legend: {
-        show: false,
-      },
-      markers: {
-        size: 1,
-      },
-      xaxis: {
-        categories: ['22th', '23th', '24th', '25th', '26th', '27th', '28th'],
-      },
-    };
-    new ApexCharts(el, visitors_chart_options).render();
+      options: { plugins: { legend: { display: false } } },
+    });
   },
 
   // Sales bar chart.
   salesBar(el) {
-    if (!el) return;
-    const sales_chart_options = {
-      series: [
-        {
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-        },
-        {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-        },
-        {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 200,
+    if (!el || typeof Chart === 'undefined') return;
+    new Chart(el, {
+      type: 'bar',
+      data: {
+        labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        datasets: [
+          { label: 'Net Profit', data: [44, 55, 57, 56, 61, 58, 63, 60, 66], backgroundColor: '#0d6efd' },
+          { label: 'Revenue', data: [76, 85, 101, 98, 87, 105, 91, 114, 94], backgroundColor: '#20c997' },
+          { label: 'Free Cash Flow', data: [35, 41, 36, 26, 45, 48, 52, 53, 41], backgroundColor: '#ffc107' },
+        ],
       },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'rounded',
-        },
-      },
-      legend: {
-        show: false,
-      },
-      colors: ['#0d6efd', '#20c997', '#ffc107'],
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
-      xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return '$ ' + val + ' thousands';
+      options: {
+        datasets: { bar: { categoryPercentage: 0.55, barPercentage: 0.9 } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => ` ${context.dataset.label}: $ ${context.parsed.y} thousands`,
+            },
           },
         },
       },
-    };
-    new ApexCharts(el, sales_chart_options).render();
+    });
   },
 
   // ---- Calendar (pages/calendar.html) ------------------------------------
@@ -341,7 +153,9 @@ window.adminlteDemo = {
   calendar(el, externalEl, removeAfterDropEl) {
     if (!el || typeof FullCalendar === 'undefined') return;
 
-    const isoDate = (d) => d.toISOString().slice(0, 10);
+    // Keep all-day dates local; UTC conversion can shift them by a day.
+    const isoDate = (d) =>
+      [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
     const today = new Date();
     const offsetDay = (n) => {
       const d = new Date(today);
@@ -350,18 +164,36 @@ window.adminlteDemo = {
     };
 
     if (externalEl) {
-      new FullCalendar.Draggable(externalEl, {
+      new FullCalendar.Interaction.Draggable(externalEl, {
         itemSelector: '.draggable-event',
         eventData: (item) => ({
           title: item.textContent.trim(),
-          backgroundColor: item.dataset.color,
-          borderColor: item.dataset.color,
+          color: item.dataset.color,
         }),
       });
     }
 
+    const cellObservers = new WeakMap();
     const calendar = new FullCalendar.Calendar(el, {
       initialView: 'dayGridMonth',
+      buttons: { today: { hint: 'Today' } },
+      // Date cells also contain event titles; include that visible text in their
+      // accessible names, including after drag, edit or navigation.
+      dayCellDidMount: ({ el: cell }) => {
+        const dateLabel = cell.getAttribute('aria-label') || '';
+        const syncLabel = () => {
+          const visibleText = cell.textContent.replace(/\s+/g, ' ').trim();
+          cell.setAttribute('aria-label', `${dateLabel} ${visibleText}`.trim());
+        };
+        const observer = new MutationObserver(syncLabel);
+        observer.observe(cell, { childList: true, subtree: true, characterData: true });
+        cellObservers.set(cell, observer);
+        syncLabel();
+      },
+      dayCellWillUnmount: ({ el: cell }) => {
+        cellObservers.get(cell)?.disconnect();
+        cellObservers.delete(cell);
+      },
       headerToolbar: {
         start: 'prev,next today',
         center: 'title',
@@ -395,34 +227,29 @@ window.adminlteDemo = {
         {
           title: 'Quarterly planning',
           start: offsetDay(-2),
-          backgroundColor: '#0d6efd',
-          borderColor: '#0d6efd',
+          color: '#0d6efd',
         },
         {
           title: 'Onboarding session',
           start: offsetDay(1),
-          backgroundColor: '#198754',
-          borderColor: '#198754',
+          color: '#198754',
         },
         {
           title: 'Design review',
           start: offsetDay(3),
           end: offsetDay(4),
-          backgroundColor: '#ffc107',
-          borderColor: '#ffc107',
-          textColor: '#000',
+          color: '#ffc107',
+          contrastColor: '#000',
         },
         {
           title: 'Release v2.5',
           start: offsetDay(7),
-          backgroundColor: '#dc3545',
-          borderColor: '#dc3545',
+          color: '#dc3545',
         },
         {
           title: 'All-hands',
           start: offsetDay(10),
-          backgroundColor: '#6f42c1',
-          borderColor: '#6f42c1',
+          color: '#6f42c1',
         },
       ],
     });
@@ -463,3 +290,46 @@ window.adminlteDemo = {
     });
   },
 };
+
+// Shared "Digital Goods / Electronics" area chart used by Dashboard v1 and v2.
+function areaChart(canvas) {
+  const { areaFill } = window.lteChartTheme;
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ["Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23"],
+      datasets: [
+        {
+          label: 'Digital Goods',
+          data: [28, 48, 40, 19, 86, 27, 90],
+          borderColor: '#0d6efd',
+          backgroundColor: areaFill('#0d6efd'),
+          pointBackgroundColor: '#0d6efd',
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: 'Electronics',
+          data: [65, 59, 80, 81, 56, 55, 40],
+          borderColor: '#20c997',
+          backgroundColor: areaFill('#20c997'),
+          pointBackgroundColor: '#20c997',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: ([item]) =>
+              `${new Date(2023, item.dataIndex).toLocaleString('en', { month: 'long' })} 2023`,
+          },
+        },
+      },
+      scales: { y: { beginAtZero: true } },
+    },
+  });
+}

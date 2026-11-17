@@ -15,7 +15,7 @@
   <!-- NuGet package metadata -->
   <PropertyGroup>
     <PackageId>ColorlibHQ.AdminLTE.AspNetCore</PackageId>
-    <Version>0.3.1</Version>
+    <Version>0.4.0</Version>
     <Authors>Colorlib</Authors>
     <Company>Colorlib</Company>
     <Product>AdminLTE 4 for ASP.NET Core</Product>
@@ -30,7 +30,7 @@
     <!-- Drop a 128x128 docs/icon.png to brand the package; auto-included when present. -->
     <PackageIcon Condition="Exists('..\..\docs\icon.png')">icon.png</PackageIcon>
     <Copyright>Copyright (c) 2014-2026 Colorlib</Copyright>
-    <PackageReleaseNotes>Package page now renders correctly: ships a Markdown-only README (nuget.org escapes raw HTML). No code changes from 0.3.0.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bundled AdminLTE 4.10.2 and Bootstrap 5.3.9 (print defaults, data-lte-print, data-lte-contrast, data-lte-primary). The demo now uses Chart.js instead of ApexCharts.</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

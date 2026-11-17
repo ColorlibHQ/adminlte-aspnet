@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-17
+
+### Changed
+
+- **Bundled AdminLTE updated to 4.10.2** (from 4.8.4) and **Bootstrap to 5.3.9**
+  (from 5.3.8), with Bootstrap Icons 1.13.2 and OverlayScrollbars 2.17.0. The
+  refreshed bundle brings the 4.9 print defaults (the app shell no longer
+  prints; `data-lte-print="plain"` opts a page into document-style printing),
+  `data-lte-contrast="aa"`, `data-lte-primary` theming and the other fixes from
+  AdminLTE 4.9.0 to 4.10.2.
+- **The demo draws its charts with Chart.js instead of ApexCharts.** From
+  ApexCharts 5.2 the library is no longer MIT-licensed, and the demo is a
+  template that gets copied into products. The dashboards now follow the core
+  AdminLTE demo: Chart.js 4.6.1 plus the shared theme preset
+  (`wwwroot/js/chart-theme.js`), which follows the colour mode live.
+- Demo: FullCalendar 6.1.20 to 7.1.5 (new stylesheets, Bootstrap 5 theme
+  plugin, `Interaction.Draggable`, `color`/`contrastColor` event options) and
+  jsVectorMap 1.5.3 to 1.7.0, matching the core demo. The logo pin moves to
+  AdminLTE 4.10.2.
+
 ## [0.3.1] - 2026-08-19
 
 ### Fixed
@@ -47,7 +67,8 @@ First public release on NuGet: Blazor components, Tag Helpers and the bundled
 AdminLTE 4 static web assets. Tagged retroactively — the release was packed and
 pushed without step 4 of `RELEASING.md`, so no tag existed until now.
 
-[Unreleased]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ColorlibHQ/adminlte-aspnet/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ColorlibHQ/adminlte-aspnet/releases/tag/v0.2.0
